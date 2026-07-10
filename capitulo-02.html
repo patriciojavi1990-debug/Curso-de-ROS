@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Capítulo 2: Instalación del Entorno de Desarrollo — ROS 2 Jazzy Jalisco, Gazebo Harmonic, WSL2, Ubuntu 24.04. Guía paso a paso con resolución de problemas reales.">
+  <meta name="keywords" content="ROS 2, Jazzy Jalisco, Gazebo Harmonic, WSL2, Ubuntu 24.04, instalación, robotica, tutorial">
+  <meta name="author" content="Curso Completo de ROS 2">
+  <title>Capítulo 2 — Instalación del Entorno de Desarrollo | Curso ROS 2 Jazzy + Gazebo Harmonic</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom Book Styles -->
+  <link href="assets/css/book.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ================================================================
+     NAVBAR
+     ================================================================ -->
+<nav class="book-navbar navbar navbar-expand-lg">
+  <div class="container-fluid px-3">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <i class="bi bi-robot me-2" style="font-size:1.4rem;color:var(--ros-primary)"></i>
+      Curso ROS 2 Jazzy
+    </a>
+    
+    <!-- Buscador de capítulos y secciones -->
+    <div class="search-wrapper mx-auto d-none d-md-block">
+      <i class="bi bi-search search-icon"></i>
+      <input type="text" id="bookSearchInput" class="form-control search-input" placeholder="Buscar capítulos o secciones..." autocomplete="off">
+      <div id="bookSearchResults" class="search-results-dropdown"></div>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+      <a href="https://docs.ros.org/en/jazzy/" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary d-none d-md-inline-flex align-items-center gap-1">
+        <i class="bi bi-box-arrow-up-right"></i> Docs ROS 2
+      </a>
+      <a href="https://github.com/" target="_blank" rel="noopener" class="btn btn-sm btn-dark d-inline-flex align-items-center gap-1">
+        <i class="bi bi-github"></i><span class="d-none d-sm-inline"> GitHub</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Sidebar Overlay (mobile) -->
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+<!-- ================================================================
+     LAYOUT
+     ================================================================ -->
+<div class="book-layout">
+
+<!-- ================================================================
+     SIDEBAR — Table of Contents
+     ================================================================ -->
+<aside id="bookSidebar" class="book-sidebar">
+  <p class="toc-title">Contenido del capítulo</p>
+  <ul class="toc-nav">
+    <li><a href="#introduccion">Introducción</a></li>
+    <li><a href="#objetivos">Objetivos</a></li>
+    <li><a href="#requisitos">Requisitos mínimos</a></li>
+    <li><a href="#arquitectura">Arquitectura del sistema</a></li>
+    <li class="mt-2"><a href="#paso1"><strong>Paso 1</strong> — Instalar WSL2</a></li>
+    <li><a href="#paso2"><strong>Paso 2</strong> — Instalar Ubuntu 24.04</a></li>
+    <li><a href="#paso3"><strong>Paso 3</strong> — Verificar Ubuntu</a></li>
+    <li><a href="#paso4"><strong>Paso 4</strong> — Herramientas necesarias</a></li>
+    <li><a href="#paso5"><strong>Paso 5</strong> — Configurar Locale</a></li>
+    <li><a href="#paso6"><strong>Paso 6</strong> — Repositorio de ROS 2</a></li>
+    <li><a href="#paso7"><strong>Paso 7</strong> — Instalar ROS 2 Jazzy</a></li>
+    <li><a href="#paso8"><strong>Paso 8</strong> — Configurar ROS</a></li>
+    <li><a href="#paso9"><strong>Paso 9</strong> — Inicializar rosdep</a></li>
+    <li><a href="#paso10"><strong>Paso 10</strong> — Probar ROS</a></li>
+    <li><a href="#paso11"><strong>Paso 11</strong> — Visual Studio Code</a></li>
+    <li><a href="#paso12"><strong>Paso 12</strong> — Crear Workspace</a></li>
+    <li><a href="#paso13"><strong>Paso 13</strong> — Crear paquete Python</a></li>
+    <li><a href="#paso14"><strong>Paso 14</strong> — Ejecutar RViz2</a></li>
+    <li><a href="#paso15"><strong>Paso 15</strong> — Instalar Gazebo Harmonic</a></li>
+    <li class="mt-2"><a href="#problemas">Problemas encontrados</a></li>
+    <li><a href="#buenas-practicas">Buenas prácticas</a></li>
+    <li><a href="#resumen">Resumen</a></li>
+    <li><a href="#laboratorio">Laboratorio</a></li>
+    <li><a href="#ejercicios">Ejercicios</a></li>
+    <li><a href="#cuestionario">Cuestionario</a></li>
+    <li><a href="#bibliografia">Bibliografía</a></li>
+  </ul>
+</aside>
+
+<!-- ================================================================
+     MAIN CONTENT
+     ================================================================ -->
+<main class="book-content">
+
+<!-- Chapter Header -->
+<header class="chapter-header">
+  <div class="container">
+    <span class="chapter-number">Capítulo 2</span>
+    <h1>Instalación del Entorno de Desarrollo</h1>
+    <p class="chapter-subtitle">WSL2 · Ubuntu 24.04 · ROS 2 Jazzy · Gazebo Harmonic · RViz2 · VS Code</p>
+  </div>
+</header>
+
+<div class="content-body">
+
+<!-- ================================================================
+     INTRODUCCIÓN
+     ================================================================ -->
+<section id="introduccion">
+  <h2><i class="bi bi-book me-2"></i>Introducción</h2>
+
+  <h3>¿Qué es ROS 2?</h3>
+  <p>
+    <strong>ROS 2</strong> (Robot Operating System 2) es un framework de código abierto para el desarrollo de software robótico. No es un sistema operativo en el sentido tradicional, sino un conjunto de bibliotecas, herramientas y convenciones que simplifican la creación de aplicaciones robóticas complejas y robustas. ROS 2 fue diseñado desde cero para superar las limitaciones de ROS 1, incorporando soporte nativo para sistemas en tiempo real, comunicaciones seguras mediante DDS (<em>Data Distribution Service</em>), y compatibilidad con múltiples plataformas.
+  </p>
+  <p>
+    La versión <strong>Jazzy Jalisco</strong>, lanzada el 23 de mayo de 2024, es una distribución <strong>LTS</strong> (<em>Long Term Support</em>) con soporte hasta mayo de 2029. Está basada en Ubuntu 24.04 LTS (Noble Numbat) y representa la opción más estable y recomendada para proyectos de producción y formación académica.
+  </p>
+
+  <h3>¿Por qué instalar ROS sobre Ubuntu?</h3>
+  <p>
+    Ubuntu es la plataforma <strong>oficialmente soportada</strong> por Open Robotics para ROS 2. Cada distribución de ROS 2 se vincula con una versión específica de Ubuntu: Jazzy Jalisco requiere <strong>Ubuntu 24.04 LTS</strong>. Instalar ROS 2 sobre Ubuntu garantiza compatibilidad completa con todos los paquetes binarios disponibles en los repositorios oficiales, evita problemas de dependencias y proporciona acceso a la documentación y soporte comunitario más extenso.
+  </p>
+
+  <h3>¿Por qué utilizar WSL2?</h3>
+  <p>
+    <strong>WSL2</strong> (Windows Subsystem for Linux 2) permite ejecutar una distribución de Linux directamente sobre Windows sin necesidad de una máquina virtual tradicional. WSL2 utiliza un kernel Linux real proporcionado por Microsoft, ejecutado sobre el hipervisor Hyper-V. Esto significa que se obtiene compatibilidad total con las llamadas al sistema Linux, mientras se mantiene la integración con el entorno Windows.
+  </p>
+  <p>
+    Desde la versión WSL 2.0, Microsoft incluye <strong>WSLg</strong> (<em>Windows Subsystem for Linux GUI</em>), que permite ejecutar aplicaciones gráficas de Linux —como RViz2 y Gazebo— directamente en el escritorio de Windows, sin necesidad de configurar un servidor X externo.
+  </p>
+
+  <h3>¿Cuáles son las ventajas frente a una máquina virtual?</h3>
+
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead>
+        <tr>
+          <th>Característica</th>
+          <th>WSL2</th>
+          <th>Máquina Virtual</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Tiempo de arranque</td><td>~2 segundos</td><td>30–60 segundos</td></tr>
+        <tr><td>Uso de RAM</td><td>Dinámico (bajo demanda)</td><td>Reservado fijo</td></tr>
+        <tr><td>Rendimiento de disco</td><td>Nativo (ext4 sobre VHDX)</td><td>Virtualizado (más lento)</td></tr>
+        <tr><td>Acceso a GPU</td><td>Sí (DirectX/OpenGL vía WSLg)</td><td>Limitado (passthrough)</td></tr>
+        <tr><td>Integración con Windows</td><td>Sistema de archivos compartido</td><td>Carpetas compartidas (lento)</td></tr>
+        <tr><td>Aplicaciones gráficas</td><td>WSLg nativo</td><td>Requiere escritorio completo</td></tr>
+        <tr><td>Configuración</td><td>Un solo comando</td><td>Descarga ISO + instalación manual</td></tr>
+        <tr><td>Consumo de recursos</td><td>Mínimo</td><td>Alto</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================================================================
+     OBJETIVOS
+     ================================================================ -->
+<section id="objetivos" class="mt-5">
+  <h2><i class="bi bi-bullseye me-2"></i>Objetivos</h2>
+  <p>Al finalizar este capítulo, el estudiante será capaz de:</p>
+  <ul class="objectives-list">
+    <li>Instalar y configurar WSL2 en Windows 11</li>
+    <li>Instalar Ubuntu 24.04 LTS como distribución WSL</li>
+    <li>Configurar Ubuntu con las herramientas necesarias para desarrollo robótico</li>
+    <li>Instalar ROS 2 Jazzy Jalisco desde los repositorios oficiales</li>
+    <li>Configurar <code>rosdep</code> para la resolución automática de dependencias</li>
+    <li>Instalar Gazebo Harmonic y sus paquetes de integración con ROS 2</li>
+    <li>Ejecutar RViz2 para la visualización de datos robóticos</li>
+    <li>Crear un Workspace de ROS 2 y compilar paquetes con <code>colcon</code></li>
+    <li>Crear un paquete Python utilizando <code>ament_python</code></li>
+  </ul>
+</section>
+
+<!-- ================================================================
+     REQUISITOS MÍNIMOS
+     ================================================================ -->
+<section id="requisitos" class="mt-5">
+  <h2><i class="bi bi-pc-display me-2"></i>Requisitos mínimos del sistema</h2>
+
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead>
+        <tr>
+          <th>Componente</th>
+          <th>Mínimo</th>
+          <th>Recomendado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><i class="bi bi-cpu me-1"></i> Procesador</td><td>Intel i5 / AMD Ryzen 5 (64-bit)</td><td>Intel i7 / AMD Ryzen 7 o superior</td></tr>
+        <tr><td><i class="bi bi-memory me-1"></i> RAM</td><td>8 GB</td><td>16 GB o más</td></tr>
+        <tr><td><i class="bi bi-device-hdd me-1"></i> Disco</td><td>25 GB libres</td><td>50 GB libres (SSD NVMe)</td></tr>
+        <tr><td><i class="bi bi-windows me-1"></i> Windows</td><td>Windows 10 versión 2004+</td><td>Windows 11 Pro (23H2+)</td></tr>
+        <tr><td><i class="bi bi-gpu-card me-1"></i> GPU</td><td>Integrada con soporte OpenGL 3.3</td><td>NVIDIA / AMD dedicada con drivers actualizados</td></tr>
+        <tr><td><i class="bi bi-terminal me-1"></i> WSL2</td><td>WSL 2.0</td><td>WSL 2.2+ con WSLg</td></tr>
+        <tr><td><i class="bi bi-ubuntu me-1"></i> Ubuntu</td><td>Ubuntu 24.04 LTS</td><td>Ubuntu 24.04.4 LTS (última revisión)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-warning">
+    <div class="callout-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Virtualización requerida</strong>
+      <p>WSL2 necesita que la virtualización por hardware esté habilitada en la BIOS/UEFI. En procesadores Intel, busque <strong>Intel VT-x</strong>; en AMD, busque <strong>AMD-V (SVM)</strong>. Sin esta opción activa, la instalación de WSL2 fallará.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     ARQUITECTURA DEL SISTEMA
+     ================================================================ -->
+<section id="arquitectura" class="mt-5">
+  <h2><i class="bi bi-diagram-3 me-2"></i>Arquitectura del sistema</h2>
+  <p>El siguiente diagrama muestra la pila de software completa que se instalará en este capítulo. Cada capa se ejecuta sobre la anterior, formando un entorno de desarrollo integrado para robótica.</p>
+
+  <div class="architecture-diagram">
+    <div class="arch-layer arch-windows"><i class="bi bi-windows me-1"></i> Windows 11 Pro</div>
+    <span class="arch-arrow">▼</span>
+    <div class="arch-layer arch-wsl"><i class="bi bi-terminal me-1"></i> WSL2 + WSLg</div>
+    <span class="arch-arrow">▼</span>
+    <div class="arch-layer arch-ubuntu"><i class="bi bi-ubuntu me-1"></i> Ubuntu 24.04.4 LTS</div>
+    <span class="arch-arrow">▼</span>
+    <div class="arch-layer arch-ros"><i class="bi bi-gear me-1"></i> ROS 2 Jazzy Jalisco</div>
+    <span class="arch-arrow">▼</span>
+    <div class="arch-layer arch-gazebo"><i class="bi bi-box me-1"></i> Gazebo Harmonic</div>
+    <span class="arch-arrow">▼</span>
+    <div class="arch-layer arch-rviz"><i class="bi bi-eye me-1"></i> RViz2</div>
+    <span class="arch-arrow">▼</span>
+    <div class="arch-layer arch-workspace"><i class="bi bi-folder2-open me-1"></i> Workspace (ros2_ws)</div>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-icon"><i class="bi bi-info-circle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Integración WSLg</strong>
+      <p>Gracias a WSLg, las aplicaciones gráficas como RViz2 y Gazebo se renderizan directamente en el escritorio de Windows usando Wayland y un compositor XWayland integrado. No es necesario instalar VcXsrv, MobaXterm ni ningún servidor X externo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     PASO 1 — INSTALAR WSL2
+     ================================================================ -->
+<section id="paso1" class="step-section">
+  <div class="step-badge"><i class="bi bi-1-circle-fill"></i> Paso 1</div>
+  <h2>Instalar WSL2</h2>
+
+  <h3>¿Qué es WSL2?</h3>
+  <p>
+    <strong>WSL2</strong> (<em>Windows Subsystem for Linux 2</em>) es la segunda generación del subsistema de Windows para Linux. A diferencia de WSL1, que traducía las llamadas al sistema Linux a llamadas NT, WSL2 ejecuta un <strong>kernel Linux real</strong> dentro de una máquina virtual ligera gestionada por Hyper-V. Esto proporciona compatibilidad completa con las llamadas al sistema Linux, rendimiento de E/S significativamente superior y la capacidad de ejecutar cualquier binario ELF de Linux.
+  </p>
+
+  <h3>Instalación</h3>
+  <p>Abra <strong>PowerShell como Administrador</strong>. Para ello, haga clic derecho sobre el botón Inicio de Windows y seleccione <em>"Terminal (Administrador)"</em> o busque <em>"PowerShell"</em> en el menú Inicio, haga clic derecho y seleccione <em>"Ejecutar como administrador"</em>.</p>
+  <p>Ejecute el siguiente comando:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        powershell (admin)
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>wsl --install</code></pre>
+  </div>
+
+  <p>Este comando realiza automáticamente las siguientes acciones:</p>
+  <ul>
+    <li>Habilita la característica opcional <em>Virtual Machine Platform</em></li>
+    <li>Habilita la característica opcional <em>Windows Subsystem for Linux</em></li>
+    <li>Descarga e instala el kernel Linux más reciente para WSL2</li>
+    <li>Establece WSL2 como la versión predeterminada</li>
+    <li>Descarga e instala Ubuntu como la distribución predeterminada</li>
+  </ul>
+
+  <div class="callout callout-warning">
+    <div class="callout-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Reinicio obligatorio</strong>
+      <p>Después de ejecutar <code>wsl --install</code>, Windows solicitará un reinicio del sistema. Este reinicio es <strong>obligatorio</strong> para que los componentes de virtualización se activen correctamente. No omita este paso.</p>
+    </div>
+  </div>
+
+  <h3>Verificar la instalación</h3>
+  <p>Una vez reiniciado el sistema, abra nuevamente PowerShell y ejecute:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        powershell
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>wsl --version</code></pre>
+  </div>
+
+  <p>La salida mostrará información similar a:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        salida
+      </span>
+    </div>
+    <pre><code>Versión de WSL: 2.2.4.0
+Versión de kernel: 5.15.153.1-2
+Versión de WSLg: 1.0.61
+Versión de MSRDC: 1.2.5326
+Versión de Direct3D: 1.611.1-81528511
+Versión DXCore: 10.0.26100.1-240331-1435.ge-release
+Versión de Windows: 10.0.22631.4890</code></pre>
+  </div>
+
+  <p>Descripción de cada campo:</p>
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead>
+        <tr><th>Campo</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Versión de WSL</strong></td><td>Versión del motor de WSL. Versiones 2.x confirman que WSL2 está activo.</td></tr>
+        <tr><td><strong>Versión de kernel</strong></td><td>Versión del kernel Linux que ejecuta WSL2, actualizado por Windows Update.</td></tr>
+        <tr><td><strong>Versión de WSLg</strong></td><td>Versión del componente gráfico que permite ejecutar aplicaciones GUI de Linux (RViz, Gazebo) en el escritorio de Windows.</td></tr>
+        <tr><td><strong>Versión de Direct3D</strong></td><td>Versión del traductor Direct3D→OpenGL que permite aceleración gráfica dentro de WSL2.</td></tr>
+        <tr><td><strong>Versión de Windows</strong></td><td>Build de Windows del sistema host. Debe ser 19041 o superior para WSL2.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================================================================
+     PASO 2 — INSTALAR UBUNTU 24.04
+     ================================================================ -->
+<section id="paso2" class="step-section">
+  <div class="step-badge"><i class="bi bi-2-circle-fill"></i> Paso 2</div>
+  <h2>Instalar Ubuntu 24.04</h2>
+
+  <h3>Descargar Ubuntu desde Microsoft Store</h3>
+  <p>
+    Si el comando <code>wsl --install</code> no instaló Ubuntu automáticamente, puede hacerlo manualmente. Abra <strong>Microsoft Store</strong>, busque <em>"Ubuntu 24.04 LTS"</em> y haga clic en <em>"Obtener"</em>. También puede instalarla desde PowerShell:
+  </p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        powershell
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>wsl --install -d Ubuntu-24.04</code></pre>
+  </div>
+
+  <h3>Crear usuario y contraseña</h3>
+  <p>
+    La primera vez que inicie Ubuntu, el sistema le solicitará crear un <strong>nombre de usuario</strong> y una <strong>contraseña</strong>. Este usuario será su cuenta principal dentro del entorno Linux y tendrá permisos <code>sudo</code> (superusuario) por defecto.
+  </p>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon"><i class="bi bi-lightbulb-fill"></i></div>
+    <div class="callout-body">
+      <strong>Consejo</strong>
+      <p>Utilice un nombre de usuario corto y en minúsculas, sin espacios ni caracteres especiales. Por ejemplo: <code>robotica</code>, <code>ros</code>, <code>dev</code>. Este nombre aparecerá en el prompt de la terminal y en las rutas del sistema.</p>
+    </div>
+  </div>
+
+  <h3>Actualizar el sistema</h3>
+  <p>Antes de instalar cualquier software adicional, actualice todos los paquetes del sistema a sus últimas versiones:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>sudo apt update
+sudo apt upgrade -y
+sudo apt autoremove -y</code></pre>
+  </div>
+
+  <p>Descripción de cada comando:</p>
+  <ul>
+    <li><code>sudo apt update</code> — Actualiza la lista de paquetes disponibles desde los repositorios configurados.</li>
+    <li><code>sudo apt upgrade -y</code> — Instala las versiones más recientes de todos los paquetes instalados. La opción <code>-y</code> acepta automáticamente la confirmación.</li>
+    <li><code>sudo apt autoremove -y</code> — Elimina paquetes que fueron instalados como dependencias y ya no son necesarios.</li>
+  </ul>
+</section>
+
+<!-- ================================================================
+     PASO 3 — VERIFICAR UBUNTU
+     ================================================================ -->
+<section id="paso3" class="step-section">
+  <div class="step-badge"><i class="bi bi-3-circle-fill"></i> Paso 3</div>
+  <h2>Verificar Ubuntu</h2>
+  <p>Ejecute los siguientes comandos para confirmar que Ubuntu se ha instalado correctamente y que la versión corresponde a la requerida por ROS 2 Jazzy.</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>lsb_release -a</code></pre>
+  </div>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        salida
+      </span>
+    </div>
+    <pre><code>No LSB modules are available.
+Distributor ID: Ubuntu
+Description:    Ubuntu 24.04.4 LTS
+Release:        24.04
+Codename:       noble</code></pre>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead><tr><th>Campo</th><th>Valor</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Distributor ID</strong></td><td>Ubuntu</td><td>Nombre de la distribución Linux.</td></tr>
+        <tr><td><strong>Description</strong></td><td>Ubuntu 24.04.4 LTS</td><td>Versión completa con número de revisión. LTS indica soporte a largo plazo (5 años).</td></tr>
+        <tr><td><strong>Release</strong></td><td>24.04</td><td>Número de versión: año 2024, mes 04 (abril).</td></tr>
+        <tr><td><strong>Codename</strong></td><td>noble</td><td>Nombre clave de la versión (<em>Noble Numbat</em>). ROS 2 Jazzy requiere exactamente este codename.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>uname -r</code></pre>
+  </div>
+
+  <p>Este comando muestra la versión del kernel Linux que ejecuta WSL2. El resultado será algo como <code>5.15.153.1-microsoft-standard-WSL2</code>. El sufijo <code>-microsoft-standard-WSL2</code> confirma que se está ejecutando el kernel optimizado de Microsoft para WSL2.</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>cat /etc/os-release</code></pre>
+  </div>
+
+  <p>Este archivo contiene metadatos detallados del sistema operativo en formato <code>clave=valor</code>. Los campos más relevantes son:</p>
+  <ul>
+    <li><code>VERSION_CODENAME=noble</code> — Codename usado por los repositorios de ROS 2 para seleccionar la rama correcta de paquetes.</li>
+    <li><code>UBUNTU_CODENAME=noble</code> — Utilizado por el script de configuración de ROS para agregar el repositorio correcto.</li>
+    <li><code>VERSION_ID="24.04"</code> — Versión numérica del sistema operativo.</li>
+  </ul>
+</section>
+
+<!-- ================================================================
+     PASO 4 — HERRAMIENTAS NECESARIAS
+     ================================================================ -->
+<section id="paso4" class="step-section">
+  <div class="step-badge"><i class="bi bi-4-circle-fill"></i> Paso 4</div>
+  <h2>Instalar herramientas necesarias</h2>
+  <p>Instale las herramientas de desarrollo y las utilidades necesarias para compilar paquetes de ROS 2, gestionar repositorios y manejar dependencias:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>sudo apt install -y \
+  curl \
+  git \
+  wget \
+  tree \
+  build-essential \
+  python3-pip \
+  python3-colcon-common-extensions \
+  python3-rosdep \
+  python3-vcstool \
+  software-properties-common</code></pre>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead><tr><th>Paquete</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><code>curl</code></td><td>Herramienta de línea de comandos para transferir datos desde o hacia un servidor. Se utiliza para descargar la llave GPG del repositorio de ROS 2.</td></tr>
+        <tr><td><code>git</code></td><td>Sistema de control de versiones distribuido. Imprescindible para clonar repositorios de paquetes de ROS 2 y gestionar el código fuente.</td></tr>
+        <tr><td><code>wget</code></td><td>Herramienta para descarga de archivos desde la web. Alternativa a <code>curl</code> para scripts de instalación.</td></tr>
+        <tr><td><code>tree</code></td><td>Muestra la estructura de directorios en forma de árbol. Útil para inspeccionar la estructura del workspace de ROS 2.</td></tr>
+        <tr><td><code>build-essential</code></td><td>Metapaquete que incluye <code>gcc</code>, <code>g++</code>, <code>make</code> y otras herramientas de compilación. Necesario para compilar paquetes de ROS 2 escritos en C++.</td></tr>
+        <tr><td><code>python3-pip</code></td><td>Gestor de paquetes de Python 3. Permite instalar paquetes de Python adicionales que puedan requerir los nodos de ROS 2.</td></tr>
+        <tr><td><code>python3-colcon-common-extensions</code></td><td>Sistema de compilación de ROS 2. <code>colcon</code> (<em>collective construction</em>) reemplaza a <code>catkin_make</code> de ROS 1 y permite compilar múltiples paquetes en un workspace.</td></tr>
+        <tr><td><code>python3-rosdep</code></td><td>Herramienta para la resolución automática de dependencias de paquetes de ROS 2. Consulta las claves de dependencia declaradas en los archivos <code>package.xml</code>.</td></tr>
+        <tr><td><code>python3-vcstool</code></td><td>Herramienta para gestionar múltiples repositorios VCS (Git, Mercurial, SVN). Utilizada con archivos <code>.repos</code> para clonar conjuntos de paquetes.</td></tr>
+        <tr><td><code>software-properties-common</code></td><td>Proporciona el comando <code>add-apt-repository</code> para agregar repositorios PPA y Universe de forma sencilla.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================================================================
+     PASO 5 — CONFIGURAR LOCALE
+     ================================================================ -->
+<section id="paso5" class="step-section">
+  <div class="step-badge"><i class="bi bi-5-circle-fill"></i> Paso 5</div>
+  <h2>Configurar Locale</h2>
+
+  <p>Verifique la configuración regional actual del sistema:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>locale</code></pre>
+  </div>
+
+  <p>Si el resultado muestra <code>LANG=C.UTF-8</code> o <code>LANG=en_US.UTF-8</code>, la configuración es correcta. Si muestra <code>POSIX</code> o no incluye <code>UTF-8</code>, ejecute los siguientes comandos:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>sudo locale-gen en_US en_US.UTF-8
+sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+export LANG=en_US.UTF-8</code></pre>
+  </div>
+
+  <h3>¿Por qué ROS 2 requiere UTF-8?</h3>
+  <p>
+    ROS 2 utiliza <strong>UTF-8</strong> como codificación de caracteres por defecto en todo su middleware de comunicación (DDS). Los nombres de tópicos, servicios, parámetros y mensajes deben estar codificados en UTF-8 para garantizar la interoperabilidad entre nodos escritos en diferentes lenguajes (Python, C++). Si el locale del sistema no está configurado correctamente en UTF-8, pueden producirse errores de codificación al publicar o suscribirse a mensajes que contengan caracteres no ASCII, y algunas herramientas de introspección como <code>ros2 topic echo</code> pueden fallar silenciosamente.
+  </p>
+</section>
+
+<!-- ================================================================
+     PASO 6 — REPOSITORIO ROS 2
+     ================================================================ -->
+<section id="paso6" class="step-section">
+  <div class="step-badge"><i class="bi bi-6-circle-fill"></i> Paso 6</div>
+  <h2>Agregar el repositorio oficial de ROS 2</h2>
+
+  <h3>Habilitar el repositorio Universe</h3>
+  <p>El repositorio Universe contiene software de código abierto mantenido por la comunidad de Ubuntu, incluyendo dependencias necesarias para ROS 2:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>sudo add-apt-repository universe</code></pre>
+  </div>
+
+  <h3>Agregar la llave GPG de ROS 2</h3>
+  <p>La llave GPG permite a <code>apt</code> verificar la autenticidad e integridad de los paquetes descargados del repositorio de ROS 2. Sin esta llave, <code>apt</code> rechazará la instalación de paquetes del repositorio:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
+  -o /usr/share/keyrings/ros-archive-keyring.gpg</code></pre>
+  </div>
+
+  <p>Descripción de las opciones de <code>curl</code>:</p>
+  <ul>
+    <li><code>-s</code> — Modo silencioso, no muestra la barra de progreso.</li>
+    <li><code>-S</code> — En combinación con <code>-s</code>, muestra errores si ocurren.</li>
+    <li><code>-L</code> — Sigue redirecciones HTTP.</li>
+    <li><code>-o</code> — Guarda la salida en el archivo especificado.</li>
+  </ul>
+
+  <h3>Agregar el repositorio de ROS 2</h3>
+  <p>Este comando crea un archivo de fuentes para <code>apt</code> que apunta al repositorio oficial de ROS 2 para la versión correcta de Ubuntu:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>echo "deb [signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] \
+  http://packages.ros.org/ros2/ubuntu \
+  $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | \
+  sudo tee /etc/apt/sources.list.d/ros2.list</code></pre>
+  </div>
+
+  <p>Desglose del comando:</p>
+  <ul>
+    <li><code>deb [signed-by=...]</code> — Indica que los paquetes deben estar firmados con la llave GPG especificada.</li>
+    <li><code>http://packages.ros.org/ros2/ubuntu</code> — URL del repositorio oficial de paquetes de ROS 2.</li>
+    <li><code>$(. /etc/os-release && echo $UBUNTU_CODENAME)</code> — Sustituye dinámicamente el codename de Ubuntu (<code>noble</code> para 24.04).</li>
+    <li><code>main</code> — Componente del repositorio que contiene los paquetes principales.</li>
+    <li><code>sudo tee</code> — Escribe la salida en el archivo con permisos de superusuario.</li>
+  </ul>
+
+  <h3>Actualizar la lista de paquetes</h3>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>sudo apt update</code></pre>
+  </div>
+
+  <p>Después de ejecutar este comando, <code>apt</code> descargará el índice de paquetes del nuevo repositorio de ROS 2. Ahora los paquetes de ROS 2 Jazzy están disponibles para instalación.</p>
+</section>
+
+<!-- ================================================================
+     PASO 7 — INSTALAR ROS 2 JAZZY
+     ================================================================ -->
+<section id="paso7" class="step-section">
+  <div class="step-badge"><i class="bi bi-7-circle-fill"></i> Paso 7</div>
+  <h2>Instalar ROS 2 Jazzy</h2>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>sudo apt install ros-jazzy-desktop -y</code></pre>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-icon"><i class="bi bi-info-circle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Tiempo de descarga</strong>
+      <p>La instalación de <code>ros-jazzy-desktop</code> descarga aproximadamente <strong>1.5 GB</strong> de paquetes. El tiempo total dependerá de la velocidad de su conexión a internet. En una conexión de 100 Mbps, puede tardar entre 5 y 15 minutos.</p>
+    </div>
+  </div>
+
+  <h3>Variantes de instalación de ROS 2</h3>
+
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead><tr><th>Variante</th><th>Paquete</th><th>Contenido</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Base</strong></td>
+          <td><code>ros-jazzy-ros-base</code></td>
+          <td>Bibliotecas de comunicación, sistema de compilación y herramientas de línea de comandos. Sin interfaz gráfica. Ideal para robots embebidos o servidores.</td>
+        </tr>
+        <tr>
+          <td><strong>Desktop</strong></td>
+          <td><code>ros-jazzy-desktop</code></td>
+          <td>Incluye todo lo de <em>Base</em> más <strong>RViz2</strong>, nodos de demostración, <code>rqt</code> (herramientas gráficas de introspección), y bibliotecas de visualización. <strong>Opción recomendada para desarrollo y formación.</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Desktop Full</strong> (histórico)</td>
+          <td><em>No disponible en Jazzy</em></td>
+          <td>En distribuciones anteriores (Humble, Foxy) existía <code>ros-<distro>-desktop-full</code> que incluía simuladores adicionales. En Jazzy, los simuladores como Gazebo se instalan por separado.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon"><i class="bi bi-lightbulb-fill"></i></div>
+    <div class="callout-body">
+      <strong>¿Por qué Desktop?</strong>
+      <p>En este curso utilizamos <code>ros-jazzy-desktop</code> porque incluye RViz2 y las herramientas gráficas de desarrollo necesarias para la formación. Para un robot real en producción, <code>ros-jazzy-ros-base</code> sería suficiente. Gazebo se instala de forma independiente en el <a href="#paso15">Paso 15</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     PASO 8 — CONFIGURAR ROS
+     ================================================================ -->
+<section id="paso8" class="step-section">
+  <div class="step-badge"><i class="bi bi-8-circle-fill"></i> Paso 8</div>
+  <h2>Configurar ROS</h2>
+
+  <h3>Agregar el source al .bashrc</h3>
+  <p>Para que ROS 2 esté disponible automáticamente cada vez que abra una terminal, agregue el archivo de configuración (<em>setup script</em>) al archivo <code>~/.bashrc</code>:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc</code></pre>
+  </div>
+
+  <h3>Recargar la configuración</h3>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>source ~/.bashrc</code></pre>
+  </div>
+
+  <h3>Verificar la distribución activa</h3>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>echo $ROS_DISTRO</code></pre>
+  </div>
+
+  <p>El resultado debe ser:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        salida
+      </span>
+    </div>
+    <pre><code>jazzy</code></pre>
+  </div>
+
+  <h3>¿Qué es <code>setup.bash</code>?</h3>
+  <p>
+    El archivo <code>/opt/ros/jazzy/setup.bash</code> es un script de configuración de entorno que realiza las siguientes acciones al ejecutarse:
+  </p>
+  <ul>
+    <li>Establece la variable <code>ROS_DISTRO=jazzy</code>, que identifica la distribución activa.</li>
+    <li>Agrega los ejecutables de ROS 2 al <code>PATH</code> del sistema (<code>/opt/ros/jazzy/bin</code>).</li>
+    <li>Configura las rutas de bibliotecas (<code>LD_LIBRARY_PATH</code>) para que el sistema encuentre las bibliotecas compartidas de ROS 2.</li>
+    <li>Configura las rutas de Python (<code>PYTHONPATH</code>) para que los módulos de ROS 2 sean importables.</li>
+    <li>Configura la variable <code>AMENT_PREFIX_PATH</code>, utilizada por el sistema de compilación <code>ament</code> para localizar paquetes instalados.</li>
+    <li>Habilita el autocompletado de comandos <code>ros2</code> en la terminal.</li>
+  </ul>
+
+  <div class="callout callout-warning">
+    <div class="callout-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Precaución</strong>
+      <p>Use <code>>></code> (append) y <strong>no</strong> <code>></code> (overwrite) al modificar <code>.bashrc</code>. Un solo <code>></code> sobrescribiría todo el contenido del archivo, lo que podría causar problemas graves en su configuración de terminal.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     PASO 9 — INICIALIZAR ROSDEP
+     ================================================================ -->
+<section id="paso9" class="step-section">
+  <div class="step-badge"><i class="bi bi-9-circle-fill"></i> Paso 9</div>
+  <h2>Inicializar rosdep</h2>
+
+  <p>Ejecute el siguiente comando para inicializar <code>rosdep</code>:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>sudo rosdep init</code></pre>
+  </div>
+
+  <div class="callout callout-danger">
+    <div class="callout-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
+    <div class="callout-body">
+      <strong>Error esperado: default sources list already exists</strong>
+      <p>Si al ejecutar <code>sudo rosdep init</code> obtiene el siguiente error:</p>
+      <pre class="mb-2 mt-2" style="background:#2D2D2D;color:#F8D7DA;padding:0.75rem;border-radius:6px;font-size:0.85rem;"><code>ERROR: default sources list file already exists:
+	/etc/ros/rosdep/sources.list.d/20-default.list
+Please delete if you wish to re-initialize</code></pre>
+      <p>
+        <strong>Este no es un error crítico.</strong> Significa que <code>rosdep</code> ya fue inicializado previamente, posiblemente durante la instalación del paquete <code>python3-rosdep</code>. El archivo de fuentes ya existe y no necesita ser recreado.
+      </p>
+    </div>
+  </div>
+
+  <p>La solución correcta es simplemente continuar con la actualización de <code>rosdep</code>:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>rosdep update</code></pre>
+  </div>
+
+  <h3>¿Qué es rosdep?</h3>
+  <p>
+    <code>rosdep</code> es una herramienta de resolución de dependencias de ROS 2. Cuando un paquete de ROS 2 declara dependencias en su archivo <code>package.xml</code> (por ejemplo, <code>&lt;depend&gt;rclpy&lt;/depend&gt;</code>), <code>rosdep</code> traduce esas claves abstractas en nombres de paquetes específicos del sistema operativo (por ejemplo, <code>python3-rclpy</code> en Ubuntu) y los instala automáticamente.
+  </p>
+  <p>
+    <code>rosdep init</code> crea el archivo de fuentes (<code>/etc/ros/rosdep/sources.list.d/20-default.list</code>) que apunta al índice central de dependencias de ROS. <code>rosdep update</code> descarga ese índice a la caché local del usuario para poder realizar consultas sin conexión.
+  </p>
+</section>
+
+<!-- ================================================================
+     PASO 10 — PROBAR ROS
+     ================================================================ -->
+<section id="paso10" class="step-section">
+  <div class="step-badge"><i class="bi bi-play-circle-fill"></i> Paso 10</div>
+  <h2>Probar ROS 2</h2>
+
+  <p>Para verificar que ROS 2 está instalado y funcionando correctamente, ejecute la prueba clásica de comunicación <em>Publisher–Subscriber</em> entre dos nodos de demostración.</p>
+
+  <h3>Terminal 1 — Talker (Publisher)</h3>
+  <p>Abra una terminal de Ubuntu y ejecute:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        terminal 1
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>ros2 run demo_nodes_cpp talker</code></pre>
+  </div>
+
+  <p>Verá un flujo continuo de mensajes:</p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        salida
+      </span>
+    </div>
+    <pre><code>[INFO] [1720000000.000000000] [talker]: Publishing: 'Hello World: 1'
+[INFO] [1720000001.000000000] [talker]: Publishing: 'Hello World: 2'
+[INFO] [1720000002.000000000] [talker]: Publishing: 'Hello World: 3'</code></pre>
+  </div>
+
+  <h3>Terminal 2 — Listener (Subscriber)</h3>
+  <p>Abra una <strong>segunda</strong> terminal de Ubuntu y ejecute:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        terminal 2
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>ros2 run demo_nodes_py listener</code></pre>
+  </div>
+
+  <p>El listener comenzará a recibir y mostrar los mensajes publicados por el talker:</p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        salida
+      </span>
+    </div>
+    <pre><code>[INFO] [1720000002.100000000] [listener]: I heard: [Hello World: 3]
+[INFO] [1720000003.100000000] [listener]: I heard: [Hello World: 4]
+[INFO] [1720000004.100000000] [listener]: I heard: [Hello World: 5]</code></pre>
+  </div>
+
+  <h3>Conceptos: Publisher y Subscriber</h3>
+  <p>
+    Este ejemplo demuestra el patrón fundamental de comunicación en ROS 2: <strong>Publish/Subscribe</strong>.
+  </p>
+  <ul>
+    <li><strong>Publisher (Talker)</strong> — Un nodo que <em>publica</em> mensajes en un <strong>tópico</strong>. En este caso, el nodo <code>talker</code> (escrito en C++) publica mensajes de tipo <code>std_msgs/msg/String</code> en el tópico <code>/chatter</code>.</li>
+    <li><strong>Subscriber (Listener)</strong> — Un nodo que se <em>suscribe</em> a un tópico para recibir mensajes. El nodo <code>listener</code> (escrito en Python) se suscribe al tópico <code>/chatter</code> y ejecuta una función <em>callback</em> cada vez que recibe un mensaje.</li>
+    <li><strong>Tópico</strong> — Un canal de comunicación con nombre (<code>/chatter</code>) donde los publishers envían datos y los subscribers los reciben. Los nodos no se comunican directamente entre sí; el tópico actúa como intermediario desacoplado.</li>
+  </ul>
+  <p>Observe que el <em>talker</em> está escrito en <strong>C++</strong> y el <em>listener</em> en <strong>Python</strong>. Esto demuestra que ROS 2 permite la comunicación transparente entre nodos de diferentes lenguajes de programación, gracias al middleware DDS.</p>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon"><i class="bi bi-lightbulb-fill"></i></div>
+    <div class="callout-body">
+      <strong>Detener los nodos</strong>
+      <p>Para detener cualquier nodo en ejecución, presione <kbd>Ctrl</kbd> + <kbd>C</kbd> en la terminal correspondiente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     PASO 11 — VISUAL STUDIO CODE
+     ================================================================ -->
+<section id="paso11" class="step-section">
+  <div class="step-badge"><i class="bi bi-code-square"></i> Paso 11</div>
+  <h2>Instalar Visual Studio Code</h2>
+
+  <h3>Instalación</h3>
+  <p>
+    Visual Studio Code se instala en <strong>Windows</strong> (no dentro de WSL). Descárguelo desde <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">code.visualstudio.com</a> e instálelo con las opciones predeterminadas. Asegúrese de marcar la opción <em>"Add to PATH"</em> durante la instalación.
+  </p>
+  <p>
+    VS Code detectará automáticamente las distribuciones WSL instaladas a través de la extensión <strong>WSL</strong> (<em>Remote — WSL</em>), que se instala por defecto en las versiones recientes de VS Code. Esto permite editar archivos dentro de Ubuntu directamente desde la interfaz de Windows.
+  </p>
+
+  <h3>Extensiones recomendadas</h3>
+  <p>Instale las siguientes extensiones dentro de VS Code para una experiencia óptima de desarrollo con ROS 2:</p>
+
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead><tr><th>Extensión</th><th>Identificador</th><th>Función</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Python</strong></td><td><code>ms-python.python</code></td><td>Soporte completo para Python: IntelliSense, depuración, linting, formateo. Esencial para nodos de ROS 2 en Python.</td></tr>
+        <tr><td><strong>ROS</strong></td><td><code>ms-iot.vscode-ros</code></td><td>Integración con ROS: autocompletado de comandos <code>ros2</code>, resaltado de archivos <code>.msg</code>, <code>.srv</code>, <code>.action</code> y <code>.launch</code>.</td></tr>
+        <tr><td><strong>C/C++</strong></td><td><code>ms-vscode.cpptools</code></td><td>IntelliSense, depuración y formateo para C/C++. Necesario para paquetes de ROS 2 escritos en C++.</td></tr>
+        <tr><td><strong>XML</strong></td><td><code>redhat.vscode-xml</code></td><td>Soporte para edición de archivos XML: <code>package.xml</code>, archivos URDF y archivos de launch.</td></tr>
+        <tr><td><strong>YAML</strong></td><td><code>redhat.vscode-yaml</code></td><td>Soporte para archivos YAML: archivos de parámetros de ROS 2, configuración de nodos y archivos <code>.repos</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Abrir el workspace desde Ubuntu</h3>
+  <p>Desde la terminal de Ubuntu, navegue a su directorio de trabajo y ejecute:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>code .</code></pre>
+  </div>
+
+  <p>Este comando abre VS Code en Windows con una conexión remota a WSL. En la esquina inferior izquierda de VS Code verá el indicador <strong>WSL: Ubuntu-24.04</strong>, confirmando que está editando archivos dentro del sistema de archivos de Linux.</p>
+
+  <div class="callout callout-note">
+    <div class="callout-icon"><i class="bi bi-bookmark-fill"></i></div>
+    <div class="callout-body">
+      <strong>Nota</strong>
+      <p>La primera vez que ejecute <code>code .</code> desde WSL, VS Code descargará e instalará automáticamente el <em>VS Code Server</em> dentro de Ubuntu. Este proceso toma unos segundos y solo ocurre una vez.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     PASO 12 — CREAR WORKSPACE
+     ================================================================ -->
+<section id="paso12" class="step-section">
+  <div class="step-badge"><i class="bi bi-folder-plus"></i> Paso 12</div>
+  <h2>Crear Workspace</h2>
+
+  <p>Un <strong>workspace</strong> (espacio de trabajo) es un directorio donde se compilan y organizan los paquetes de ROS 2. Siga estos pasos para crear su primer workspace:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws
+colcon build</code></pre>
+  </div>
+
+  <h3>Agregar el workspace al .bashrc</h3>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>echo "source ~/ros2_ws/install/setup.bash" >> ~/.bashrc
+source ~/.bashrc</code></pre>
+  </div>
+
+  <h3>Estructura de carpetas del workspace</h3>
+  <p>Después de ejecutar <code>colcon build</code>, el workspace contiene cuatro directorios principales:</p>
+
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead><tr><th>Directorio</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>src/</code></td>
+          <td><strong>Código fuente.</strong> Aquí se colocan los paquetes de ROS 2 (manualmente o clonados con <code>git</code>). Es el único directorio que el desarrollador modifica directamente.</td>
+        </tr>
+        <tr>
+          <td><code>build/</code></td>
+          <td><strong>Artefactos de compilación.</strong> Contiene los archivos intermedios generados durante la compilación (archivos objeto, CMake cache, etc.). Se puede eliminar y regenerar con <code>colcon build</code>.</td>
+        </tr>
+        <tr>
+          <td><code>install/</code></td>
+          <td><strong>Resultado de la instalación.</strong> Contiene los ejecutables, bibliotecas y archivos de configuración instalados. El archivo <code>install/setup.bash</code> hace que estos paquetes estén disponibles para <code>ros2 run</code>.</td>
+        </tr>
+        <tr>
+          <td><code>log/</code></td>
+          <td><strong>Registros de compilación.</strong> Contiene los archivos de log generados por <code>colcon</code> durante cada compilación. Útil para depurar errores de compilación.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon"><i class="bi bi-lightbulb-fill"></i></div>
+    <div class="callout-body">
+      <strong>Limpieza</strong>
+      <p>Si necesita una compilación limpia, elimine los directorios <code>build/</code>, <code>install/</code> y <code>log/</code>, y ejecute <code>colcon build</code> nuevamente. Nunca elimine <code>src/</code>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     PASO 13 — CREAR PAQUETE PYTHON
+     ================================================================ -->
+<section id="paso13" class="step-section">
+  <div class="step-badge"><i class="bi bi-box-seam"></i> Paso 13</div>
+  <h2>Crear un paquete Python</h2>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>cd ~/ros2_ws/src
+
+ros2 pkg create \
+  --build-type ament_python \
+  robotica_basica</code></pre>
+  </div>
+
+  <p>Compile el workspace incluyendo el nuevo paquete:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>cd ~/ros2_ws
+colcon build --symlink-install</code></pre>
+  </div>
+
+  <h3>¿Qué es <code>ament_python</code>?</h3>
+  <p>
+    <code>ament_python</code> es el sistema de compilación de ROS 2 para paquetes escritos <strong>exclusivamente en Python</strong>. Es la contraparte de <code>ament_cmake</code> (para C++) dentro del ecosistema de compilación <strong>ament</strong> de ROS 2.
+  </p>
+  <p>Cuando se crea un paquete con <code>--build-type ament_python</code>, se genera la siguiente estructura:</p>
+  <ul>
+    <li><code>package.xml</code> — Manifiesto del paquete con metadatos (nombre, versión, dependencias).</li>
+    <li><code>setup.py</code> — Script de instalación de Python (compatible con <code>setuptools</code>).</li>
+    <li><code>setup.cfg</code> — Configuración de instalación (<code>install-scripts</code> y <code>script-dir</code>).</li>
+    <li><code>robotica_basica/</code> — Directorio del módulo Python con un archivo <code>__init__.py</code>.</li>
+    <li><code>resource/</code> — Directorio de marcador para el índice de paquetes de <code>ament</code>.</li>
+  </ul>
+  <p>
+    La opción <code>--symlink-install</code> crea enlaces simbólicos en lugar de copiar archivos durante la instalación. Esto permite que los cambios en el código Python se reflejen inmediatamente sin necesidad de recompilar, acelerando significativamente el ciclo de desarrollo.
+  </p>
+</section>
+
+<!-- ================================================================
+     PASO 14 — EJECUTAR RVIZ2
+     ================================================================ -->
+<section id="paso14" class="step-section">
+  <div class="step-badge"><i class="bi bi-eye-fill"></i> Paso 14</div>
+  <h2>Ejecutar RViz2</h2>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>rviz2</code></pre>
+  </div>
+
+  <p>RViz2 (<em>ROS Visualization 2</em>) es la herramienta principal de visualización de ROS 2. Permite ver datos de sensores, modelos de robots (URDF), mapas, trayectorias, nubes de puntos y otros tipos de datos robóticos en un entorno 3D interactivo.</p>
+
+  <div class="callout callout-warning">
+    <div class="callout-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Advertencia esperada: Stereo is NOT SUPPORTED</strong>
+      <p>Al iniciar RViz2 en WSL2, es común ver el siguiente mensaje en la terminal:</p>
+      <pre class="mb-2 mt-2" style="background:#2D2D2D;color:#FFF3E0;padding:0.75rem;border-radius:6px;font-size:0.85rem;"><code>[INFO] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [rviz2]: OpenGL version: 4.3 (Compatibility Profile) ...</code></pre>
+      <p>
+        <strong>Este mensaje no es un error.</strong> Indica que la renderización estereoscópica (para visores 3D o gafas de realidad virtual) no está disponible en el entorno WSLg. La funcionalidad de RViz2 no se ve afectada en absoluto. Todas las visualizaciones 2D y 3D funcionan normalmente.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     PASO 15 — INSTALAR GAZEBO HARMONIC
+     ================================================================ -->
+<section id="paso15" class="step-section">
+  <div class="step-badge"><i class="bi bi-boxes"></i> Paso 15</div>
+  <h2>Instalar Gazebo Harmonic</h2>
+
+  <p><strong>Gazebo Harmonic</strong> (también conocido como Gazebo Sim, antes Ignition Gazebo) es el simulador 3D de robótica recomendado para ROS 2 Jazzy. Permite simular robots, sensores y entornos físicos con un motor de física realista.</p>
+
+  <h3>Instalación</h3>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>sudo apt update
+
+sudo apt install -y \
+  ros-jazzy-ros-gz \
+  ros-jazzy-ros-gz-sim \
+  ros-jazzy-ros-gz-bridge \
+  ros-jazzy-gz-tools-vendor</code></pre>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead><tr><th>Paquete</th><th>Función</th></tr></thead>
+      <tbody>
+        <tr><td><code>ros-jazzy-ros-gz</code></td><td>Metapaquete que agrupa todos los componentes de integración entre ROS 2 y Gazebo.</td></tr>
+        <tr><td><code>ros-jazzy-ros-gz-sim</code></td><td>Paquete de simulación que incluye el simulador Gazebo y archivos de launch para ROS 2.</td></tr>
+        <tr><td><code>ros-jazzy-ros-gz-bridge</code></td><td>Puente bidireccional entre tópicos de ROS 2 y tópicos de Gazebo Transport. Permite que los datos del simulador fluyan hacia nodos de ROS 2 y viceversa.</td></tr>
+        <tr><td><code>ros-jazzy-gz-tools-vendor</code></td><td>Proporciona herramientas de línea de comandos para Gazebo (<code>gz</code>).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Verificar la instalación</h3>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>ros2 pkg list | grep ros_gz</code></pre>
+  </div>
+
+  <p>Deberá ver al menos los siguientes paquetes:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        salida
+      </span>
+    </div>
+    <pre><code>ros_gz
+ros_gz_bridge
+ros_gz_image
+ros_gz_interfaces
+ros_gz_sim</code></pre>
+  </div>
+
+  <h3>Problema conocido: <code>gz sim</code> — command not found</h3>
+
+  <div class="callout callout-danger">
+    <div class="callout-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
+    <div class="callout-body">
+      <strong>Comando <code>gz sim</code> no encontrado</strong>
+      <p>En esta instalación, al intentar ejecutar Gazebo directamente con el comando <code>gz sim</code>, se obtuvo el error:</p>
+      <pre class="mb-2 mt-2" style="background:#2D2D2D;color:#F8D7DA;padding:0.75rem;border-radius:6px;font-size:0.85rem;"><code>gz sim
+command not found</code></pre>
+      <p>
+        Esto ocurre porque la instalación a través de los paquetes <code>ros-jazzy-ros-gz-*</code> no siempre coloca el ejecutable <code>gz</code> en el <code>PATH</code> del sistema. El binario está empaquetado como un <em>vendor package</em> y su ruta no se exporta globalmente.
+      </p>
+    </div>
+  </div>
+
+  <p>La forma correcta y recomendada de ejecutar Gazebo Harmonic en esta configuración es a través de ROS 2 launch:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>ros2 launch ros_gz_sim gz_sim.launch.py</code></pre>
+  </div>
+
+  <p>Este comando inicia Gazebo Harmonic con un mundo vacío. Para abrir un mundo de ejemplo con formas geométricas y física activa, ejecute:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="code-block-lang">
+        <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span>
+        bash
+      </span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>ros2 launch ros_gz_sim gz_sim.launch.py gz_args:="shapes.sdf"</code></pre>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon"><i class="bi bi-lightbulb-fill"></i></div>
+    <div class="callout-body">
+      <strong>Primer inicio</strong>
+      <p>La primera vez que se ejecuta Gazebo, puede tardar varios minutos en cargar mientras descarga modelos y texturas. Las ejecuciones posteriores serán significativamente más rápidas porque los recursos se almacenan en caché localmente en <code>~/.gz/</code>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     PROBLEMAS ENCONTRADOS
+     ================================================================ -->
+<section id="problemas" class="mt-5">
+  <h2><i class="bi bi-bug me-2"></i>Problemas encontrados durante la instalación</h2>
+  <p>La siguiente tabla documenta los problemas reales encontrados durante esta instalación y sus soluciones verificadas:</p>
+
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead>
+        <tr><th style="min-width:200px">Problema</th><th>Causa</th><th>Solución</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>ERROR: default sources list already exists</code></td>
+          <td><code>rosdep init</code> ya fue ejecutado previamente (posiblemente durante la instalación de <code>python3-rosdep</code>).</td>
+          <td>Ignorar el error y ejecutar <code>rosdep update</code> directamente.</td>
+        </tr>
+        <tr>
+          <td><code>No executable found</code> al usar <code>ros2 run</code></td>
+          <td>El entorno de ROS 2 no ha sido cargado en la terminal actual. Falta ejecutar <code>source</code>.</td>
+          <td>Ejecutar <code>source /opt/ros/jazzy/setup.bash</code> o abrir una nueva terminal (si ya se configuró <code>.bashrc</code>).</td>
+        </tr>
+        <tr>
+          <td><code>PackageNotFoundError</code> al compilar</td>
+          <td>El paquete no existe en el workspace, o el <code>setup.bash</code> del workspace no ha sido cargado.</td>
+          <td>Verificar que el paquete existe en <code>~/ros2_ws/src/</code> y ejecutar <code>source ~/ros2_ws/install/setup.bash</code>.</td>
+        </tr>
+        <tr>
+          <td><code>BrokenPipeError</code> al ejecutar <code>ros2 topic list</code></td>
+          <td>Error intermitente relacionado con la comunicación DDS cuando la red no está completamente inicializada en WSL2.</td>
+          <td>Esperar unos segundos y reintentar. Si persiste, reiniciar WSL con <code>wsl --shutdown</code> desde PowerShell.</td>
+        </tr>
+        <tr>
+          <td><code>Stereo is NOT SUPPORTED</code></td>
+          <td>WSLg no soporta renderización estereoscópica para visores 3D/VR.</td>
+          <td>Ignorar el mensaje. No afecta la funcionalidad de RViz2.</td>
+        </tr>
+        <tr>
+          <td><code>gz sim — command not found</code></td>
+          <td>El ejecutable <code>gz</code> no está en el <code>PATH</code> cuando se instala a través de los paquetes vendor de ROS 2.</td>
+          <td>Utilizar <code>ros2 launch ros_gz_sim gz_sim.launch.py</code> en lugar del comando <code>gz</code> directo.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================================================================
+     BUENAS PRÁCTICAS
+     ================================================================ -->
+<section id="buenas-practicas" class="mt-5">
+  <h2><i class="bi bi-shield-check me-2"></i>Buenas prácticas</h2>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon"><i class="bi bi-1-circle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Actualice frecuentemente</strong>
+      <p>Ejecute <code>sudo apt update && sudo apt upgrade -y</code> al menos una vez por semana para mantener los paquetes de ROS 2 y del sistema operativo al día con las correcciones de seguridad y bugs.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon"><i class="bi bi-2-circle-fill"></i></div>
+    <div class="callout-body">
+      <strong>No mezcle distribuciones de ROS 2</strong>
+      <p>Evite tener paquetes de múltiples distribuciones (por ejemplo, Humble y Jazzy) en el mismo <code>.bashrc</code>. Solo haga <code>source</code> de una distribución a la vez.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon"><i class="bi bi-3-circle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Use <code>--symlink-install</code> para paquetes Python</strong>
+      <p>Compile siempre con <code>colcon build --symlink-install</code> durante el desarrollo de paquetes Python. Esto evita recompilar después de cada cambio en el código fuente.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon"><i class="bi bi-4-circle-fill"></i></div>
+    <div class="callout-body">
+      <strong>No edite archivos fuera de <code>src/</code></strong>
+      <p>Los directorios <code>build/</code>, <code>install/</code> y <code>log/</code> son generados automáticamente por <code>colcon</code>. Nunca modifique archivos en estos directorios manualmente.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon"><i class="bi bi-5-circle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Haga backup de <code>.bashrc</code></strong>
+      <p>Antes de modificar <code>~/.bashrc</code>, haga una copia: <code>cp ~/.bashrc ~/.bashrc.bak</code>. Esto le permitirá restaurar la configuración si comete un error.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon"><i class="bi bi-6-circle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Reinicie WSL si experimenta problemas gráficos</strong>
+      <p>Si RViz2 o Gazebo no se abren correctamente, ejecute <code>wsl --shutdown</code> desde PowerShell y vuelva a abrir Ubuntu. Esto reinicia el compositor WSLg y resuelve la mayoría de los problemas gráficos.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon"><i class="bi bi-7-circle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Use Git desde el primer momento</strong>
+      <p>Inicialice un repositorio Git en su workspace: <code>cd ~/ros2_ws/src && git init</code>. Esto le permitirá rastrear cambios, revertir errores y colaborar con otros desarrolladores.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     RESUMEN
+     ================================================================ -->
+<section id="resumen" class="mt-5">
+  <h2><i class="bi bi-journal-check me-2"></i>Resumen</h2>
+  <p>En este capítulo se ha completado la instalación y configuración de un entorno de desarrollo completo para robótica con ROS 2. A continuación se resume lo aprendido:</p>
+  <ul>
+    <li><strong>WSL2</strong> — Se instaló el subsistema de Windows para Linux, que permite ejecutar Ubuntu de forma nativa sobre Windows con rendimiento cercano al bare-metal.</li>
+    <li><strong>Ubuntu 24.04 LTS</strong> — Se configuró la distribución de Linux requerida por ROS 2 Jazzy, incluyendo la actualización del sistema y la configuración del locale UTF-8.</li>
+    <li><strong>Herramientas de desarrollo</strong> — Se instalaron las herramientas fundamentales: <code>git</code>, <code>colcon</code>, <code>rosdep</code>, <code>vcstool</code> y el toolchain de compilación C/C++.</li>
+    <li><strong>ROS 2 Jazzy Jalisco</strong> — Se instaló la distribución LTS de ROS 2 desde los repositorios oficiales, se configuró el <code>setup.bash</code> y se verificó con la prueba Publisher/Subscriber.</li>
+    <li><strong>rosdep</strong> — Se inicializó y actualizó el sistema de resolución de dependencias, documentando el error esperado <code>sources list already exists</code>.</li>
+    <li><strong>Visual Studio Code</strong> — Se configuró el editor con las extensiones necesarias y se estableció la conexión remota a WSL.</li>
+    <li><strong>Workspace</strong> — Se creó el workspace <code>ros2_ws</code>, se compiló con <code>colcon build</code> y se entendió la estructura de directorios generada.</li>
+    <li><strong>Paquete Python</strong> — Se creó un paquete con <code>ament_python</code> y se compiló con <code>--symlink-install</code>.</li>
+    <li><strong>RViz2</strong> — Se ejecutó la herramienta de visualización, documentando la advertencia inofensiva de estéreo no soportado.</li>
+    <li><strong>Gazebo Harmonic</strong> — Se instalaron los paquetes de integración con ROS 2 y se documentó el problema del comando <code>gz</code> no encontrado con su solución a través de <code>ros2 launch</code>.</li>
+  </ul>
+</section>
+
+<!-- ================================================================
+     LABORATORIO
+     ================================================================ -->
+<section id="laboratorio" class="mt-5">
+  <h2><i class="bi bi-mortarboard me-2"></i>Laboratorio guiado</h2>
+  <p>Complete las siguientes actividades en orden para verificar que su entorno de desarrollo está completamente operativo. Cada paso incluye el resultado esperado.</p>
+
+  <div class="lab-step">
+    <div class="lab-step-number">1</div>
+    <div class="lab-step-body">
+      <strong>Verificar ROS 2</strong>
+      <p>Abra una terminal de Ubuntu y ejecute:</p>
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-lang"><span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span> bash</span>
+          <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+        </div>
+        <pre><code>echo $ROS_DISTRO
+ros2 --help</code></pre>
+      </div>
+      <p><strong>Resultado esperado:</strong> La variable muestra <code>jazzy</code> y se despliega la ayuda de <code>ros2</code> con la lista de subcomandos disponibles (action, bag, component, daemon, doctor, interface, launch, lifecycle, multicast, node, param, pkg, run, security, service, topic, wtf).</p>
+    </div>
+  </div>
+
+  <div class="lab-step">
+    <div class="lab-step-number">2</div>
+    <div class="lab-step-body">
+      <strong>Abrir RViz2</strong>
+      <p>Ejecute el siguiente comando:</p>
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-lang"><span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span> bash</span>
+          <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+        </div>
+        <pre><code>rviz2</code></pre>
+      </div>
+      <p><strong>Resultado esperado:</strong> Se abre la ventana de RViz2 con la vista 3D vacía y los paneles de configuración. Cierre RViz2 con <kbd>Ctrl</kbd>+<kbd>C</kbd>.</p>
+    </div>
+  </div>
+
+  <div class="lab-step">
+    <div class="lab-step-number">3</div>
+    <div class="lab-step-body">
+      <strong>Abrir Gazebo Harmonic</strong>
+      <p>Ejecute:</p>
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-lang"><span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span> bash</span>
+          <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+        </div>
+        <pre><code>ros2 launch ros_gz_sim gz_sim.launch.py gz_args:="shapes.sdf"</code></pre>
+      </div>
+      <p><strong>Resultado esperado:</strong> Se abre Gazebo con un mundo que contiene formas geométricas (esferas, cilindros, cajas). Cierre con <kbd>Ctrl</kbd>+<kbd>C</kbd>.</p>
+    </div>
+  </div>
+
+  <div class="lab-step">
+    <div class="lab-step-number">4</div>
+    <div class="lab-step-body">
+      <strong>Ejecutar Talker y Listener</strong>
+      <p>Abra <strong>dos terminales</strong>. En la primera:</p>
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-lang"><span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span> terminal 1</span>
+          <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+        </div>
+        <pre><code>ros2 run demo_nodes_cpp talker</code></pre>
+      </div>
+      <p>En la segunda:</p>
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-lang"><span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span> terminal 2</span>
+          <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+        </div>
+        <pre><code>ros2 run demo_nodes_py listener</code></pre>
+      </div>
+      <p><strong>Resultado esperado:</strong> El listener muestra <code>I heard: [Hello World: N]</code> en sincronía con los mensajes del talker.</p>
+    </div>
+  </div>
+
+  <div class="lab-step">
+    <div class="lab-step-number">5</div>
+    <div class="lab-step-body">
+      <strong>Listar tópicos activos</strong>
+      <p>Con el talker todavía en ejecución, abra una tercera terminal y ejecute:</p>
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-lang"><span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span> terminal 3</span>
+          <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+        </div>
+        <pre><code>ros2 topic list</code></pre>
+      </div>
+      <p><strong>Resultado esperado:</strong> Aparece <code>/chatter</code> junto con <code>/parameter_events</code> y <code>/rosout</code>.</p>
+    </div>
+  </div>
+
+  <div class="lab-step">
+    <div class="lab-step-number">6</div>
+    <div class="lab-step-body">
+      <strong>Verificar el workspace</strong>
+      <p>Ejecute:</p>
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-lang"><span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span> bash</span>
+          <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+        </div>
+        <pre><code>cd ~/ros2_ws
+tree -L 2</code></pre>
+      </div>
+      <p><strong>Resultado esperado:</strong> Se muestra la estructura con los directorios <code>src/</code>, <code>build/</code>, <code>install/</code> y <code>log/</code>, y dentro de <code>src/</code> el paquete <code>robotica_basica/</code>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     EJERCICIOS
+     ================================================================ -->
+<section id="ejercicios" class="mt-5">
+  <h2><i class="bi bi-pencil-square me-2"></i>Ejercicios</h2>
+
+  <div class="exercise-card">
+    <p><span class="exercise-number">1</span> <strong>Verificar la versión del kernel WSL.</strong> Ejecute el comando apropiado para obtener la versión del kernel y explique qué significa el sufijo <code>-microsoft-standard-WSL2</code>.</p>
+  </div>
+
+  <div class="exercise-card">
+    <p><span class="exercise-number">2</span> <strong>Listar todas las distribuciones WSL instaladas.</strong> Desde PowerShell, utilice el comando <code>wsl -l -v</code> y explique la diferencia entre las columnas NAME, STATE y VERSION.</p>
+  </div>
+
+  <div class="exercise-card">
+    <p><span class="exercise-number">3</span> <strong>Inspeccionar las variables de entorno de ROS 2.</strong> Ejecute <code>env | grep ROS</code> y <code>env | grep AMENT</code>. Documente cada variable encontrada y su propósito.</p>
+  </div>
+
+  <div class="exercise-card">
+    <p><span class="exercise-number">4</span> <strong>Crear un segundo paquete Python.</strong> Cree un paquete llamado <code>mi_robot</code> con <code>ament_python</code>, compílelo y verifique que aparece en <code>ros2 pkg list | grep mi_robot</code>.</p>
+  </div>
+
+  <div class="exercise-card">
+    <p><span class="exercise-number">5</span> <strong>Explorar los nodos de demostración.</strong> Liste todos los ejecutables del paquete <code>demo_nodes_cpp</code> con <code>ros2 pkg executables demo_nodes_cpp</code>. Ejecute al menos tres nodos diferentes y documente su comportamiento.</p>
+  </div>
+
+  <div class="exercise-card">
+    <p><span class="exercise-number">6</span> <strong>Analizar un tópico.</strong> Con el talker en ejecución, use <code>ros2 topic info /chatter</code> y <code>ros2 topic echo /chatter</code>. Explique el tipo de mensaje, el número de publishers y subscribers.</p>
+  </div>
+
+  <div class="exercise-card">
+    <p><span class="exercise-number">7</span> <strong>Verificar la conexión DDS.</strong> Ejecute <code>ros2 doctor</code> y analice el reporte generado. Identifique posibles advertencias y explique su significado.</p>
+  </div>
+
+  <div class="exercise-card">
+    <p><span class="exercise-number">8</span> <strong>Estructura del paquete.</strong> Navegue al directorio <code>~/ros2_ws/src/robotica_basica/</code> y ejecute <code>tree</code>. Documente cada archivo y directorio generado, explicando su función dentro del sistema de compilación <code>ament_python</code>.</p>
+  </div>
+
+  <div class="exercise-card">
+    <p><span class="exercise-number">9</span> <strong>Compilación selectiva.</strong> Investigue cómo compilar un solo paquete del workspace usando <code>colcon build --packages-select</code>. Compile únicamente <code>robotica_basica</code> y compare el tiempo de compilación con <code>colcon build</code> completo.</p>
+  </div>
+
+  <div class="exercise-card">
+    <p><span class="exercise-number">10</span> <strong>Explorar Gazebo.</strong> Inicie Gazebo con el mundo <code>shapes.sdf</code> y explore la interfaz. Identifique los paneles de escena, entidades, componentes y la barra de herramientas. Agregue un modelo desde la biblioteca de modelos y documente los pasos.</p>
+  </div>
+</section>
+
+<!-- ================================================================
+     CUESTIONARIO
+     ================================================================ -->
+<section id="cuestionario" class="mt-5">
+  <h2><i class="bi bi-question-circle me-2"></i>Cuestionario</h2>
+
+  <!-- Q1 -->
+  <div class="quiz-question">
+    <p><span class="q-number">1.</span> ¿Qué kernel utiliza WSL2 para ejecutar distribuciones Linux?</p>
+    <ul class="quiz-options">
+      <li>Un kernel Windows NT traducido</li>
+      <li>Un kernel Linux real ejecutado sobre Hyper-V</li>
+      <li>Un kernel FreeBSD adaptado</li>
+      <li>El mismo kernel de Windows con una capa de compatibilidad</li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: b)</strong> WSL2 ejecuta un kernel Linux real proporcionado y mantenido por Microsoft, dentro de una máquina virtual ligera gestionada por Hyper-V.</p>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question">
+    <p><span class="q-number">2.</span> ¿Cuál es el codename de Ubuntu 24.04 LTS?</p>
+    <ul class="quiz-options">
+      <li>Jammy Jellyfish</li>
+      <li>Noble Numbat</li>
+      <li>Focal Fossa</li>
+      <li>Kinetic Kudu</li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: b)</strong> Ubuntu 24.04 LTS tiene el codename <em>Noble Numbat</em>.</p>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question">
+    <p><span class="q-number">3.</span> ¿Qué herramienta reemplaza a <code>catkin_make</code> en ROS 2?</p>
+    <ul class="quiz-options">
+      <li><code>cmake</code></li>
+      <li><code>make</code></li>
+      <li><code>colcon</code></li>
+      <li><code>rosdep</code></li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: c)</strong> <code>colcon</code> (<em>collective construction</em>) es el sistema de compilación que reemplaza a <code>catkin_make</code> de ROS 1.</p>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question">
+    <p><span class="q-number">4.</span> ¿Por qué ROS 2 requiere que el locale del sistema esté configurado en UTF-8?</p>
+    <ul class="quiz-options">
+      <li>Para soportar nombres de archivos con acentos</li>
+      <li>Porque DDS utiliza UTF-8 como codificación estándar para mensajes</li>
+      <li>Para compatibilidad con Python 2</li>
+      <li>Es un requisito del sistema de compilación CMake</li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: b)</strong> El middleware DDS de ROS 2 utiliza UTF-8 para la serialización de mensajes y la interoperabilidad entre nodos.</p>
+  </div>
+
+  <!-- Q5 -->
+  <div class="quiz-question">
+    <p><span class="q-number">5.</span> ¿Qué hace el archivo <code>/opt/ros/jazzy/setup.bash</code>?</p>
+    <ul class="quiz-options">
+      <li>Instala ROS 2 Jazzy</li>
+      <li>Compila todos los paquetes del workspace</li>
+      <li>Configura las variables de entorno necesarias para usar ROS 2</li>
+      <li>Actualiza los repositorios de paquetes</li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: c)</strong> El archivo <code>setup.bash</code> configura las variables <code>PATH</code>, <code>LD_LIBRARY_PATH</code>, <code>PYTHONPATH</code>, <code>AMENT_PREFIX_PATH</code> y <code>ROS_DISTRO</code>.</p>
+  </div>
+
+  <!-- Q6 -->
+  <div class="quiz-question">
+    <p><span class="q-number">6.</span> ¿Cuál es la diferencia principal entre <code>ros-jazzy-ros-base</code> y <code>ros-jazzy-desktop</code>?</p>
+    <ul class="quiz-options">
+      <li><code>ros-base</code> incluye Gazebo y <code>desktop</code> no</li>
+      <li><code>desktop</code> incluye RViz2 y herramientas gráficas; <code>ros-base</code> solo incluye las bibliotecas de comunicación</li>
+      <li>Son exactamente iguales</li>
+      <li><code>ros-base</code> solo funciona en ARM y <code>desktop</code> solo en x86</li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: b)</strong> <code>desktop</code> incluye todo lo de <code>ros-base</code> más RViz2, <code>rqt</code>, nodos de demostración y herramientas de visualización.</p>
+  </div>
+
+  <!-- Q7 -->
+  <div class="quiz-question">
+    <p><span class="q-number">7.</span> ¿Qué ocurre si se usa <code>></code> en lugar de <code>>></code> al modificar <code>.bashrc</code>?</p>
+    <ul class="quiz-options">
+      <li>Se agrega la línea al final del archivo</li>
+      <li>Se sobrescribe todo el contenido del archivo</li>
+      <li>Se crea un archivo de respaldo automático</li>
+      <li>No hay diferencia</li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: b)</strong> El operador <code>></code> sobrescribe el archivo completo, mientras que <code>>></code> agrega al final (<em>append</em>).</p>
+  </div>
+
+  <!-- Q8 -->
+  <div class="quiz-question">
+    <p><span class="q-number">8.</span> ¿Qué directorio del workspace contiene el código fuente de los paquetes?</p>
+    <ul class="quiz-options">
+      <li><code>build/</code></li>
+      <li><code>install/</code></li>
+      <li><code>src/</code></li>
+      <li><code>log/</code></li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: c)</strong> El directorio <code>src/</code> es donde se colocan los paquetes de ROS 2 con su código fuente.</p>
+  </div>
+
+  <!-- Q9 -->
+  <div class="quiz-question">
+    <p><span class="q-number">9.</span> ¿Qué hace <code>rosdep</code>?</p>
+    <ul class="quiz-options">
+      <li>Compila paquetes de ROS 2</li>
+      <li>Resuelve e instala las dependencias del sistema declaradas en <code>package.xml</code></li>
+      <li>Publica mensajes en tópicos</li>
+      <li>Configura la red para DDS</li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: b)</strong> <code>rosdep</code> traduce las dependencias abstractas de <code>package.xml</code> a paquetes del sistema operativo y los instala.</p>
+  </div>
+
+  <!-- Q10 -->
+  <div class="quiz-question">
+    <p><span class="q-number">10.</span> ¿Qué ventaja ofrece <code>--symlink-install</code> durante la compilación?</p>
+    <ul class="quiz-options">
+      <li>Compila más rápido usando múltiples núcleos</li>
+      <li>Crea enlaces simbólicos para que los cambios en Python se reflejen sin recompilar</li>
+      <li>Instala los paquetes en <code>/opt/ros/</code> en lugar del workspace</li>
+      <li>Habilita la depuración paso a paso</li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: b)</strong> <code>--symlink-install</code> crea enlaces simbólicos desde <code>install/</code> hacia <code>src/</code>, permitiendo que los cambios en scripts Python estén disponibles inmediatamente.</p>
+  </div>
+
+  <!-- Q11 -->
+  <div class="quiz-question">
+    <p><span class="q-number">11.</span> ¿Qué componente de WSL2 permite ejecutar aplicaciones gráficas de Linux en Windows?</p>
+    <ul class="quiz-options">
+      <li>VcXsrv</li>
+      <li>X11</li>
+      <li>WSLg</li>
+      <li>Remote Desktop</li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: c)</strong> WSLg (<em>Windows Subsystem for Linux GUI</em>) proporciona soporte nativo para aplicaciones gráficas de Linux sin necesidad de un servidor X externo.</p>
+  </div>
+
+  <!-- Q12 -->
+  <div class="quiz-question">
+    <p><span class="q-number">12.</span> ¿Cuál es el patrón de comunicación demostrado por los nodos Talker y Listener?</p>
+    <ul class="quiz-options">
+      <li>Request/Response</li>
+      <li>Publish/Subscribe</li>
+      <li>Action Client/Server</li>
+      <li>Parameter Server</li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: b)</strong> El patrón Publish/Subscribe es el modelo fundamental de comunicación en ROS 2, donde un publisher envía datos a un tópico y un subscriber los recibe.</p>
+  </div>
+
+  <!-- Q13 -->
+  <div class="quiz-question">
+    <p><span class="q-number">13.</span> ¿Qué sistema de compilación se usa para paquetes Python puros en ROS 2?</p>
+    <ul class="quiz-options">
+      <li><code>ament_cmake</code></li>
+      <li><code>catkin</code></li>
+      <li><code>ament_python</code></li>
+      <li><code>setuptools</code></li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: c)</strong> <code>ament_python</code> es el sistema de compilación de ROS 2 específico para paquetes escritos exclusivamente en Python.</p>
+  </div>
+
+  <!-- Q14 -->
+  <div class="quiz-question">
+    <p><span class="q-number">14.</span> ¿Cómo se ejecuta Gazebo Harmonic cuando el comando <code>gz sim</code> no funciona en la instalación a través de paquetes ROS?</p>
+    <ul class="quiz-options">
+      <li><code>gazebo</code></li>
+      <li><code>ignition gazebo</code></li>
+      <li><code>ros2 launch ros_gz_sim gz_sim.launch.py</code></li>
+      <li><code>roslaunch gazebo_ros gazebo.launch</code></li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: c)</strong> La forma recomendada es utilizar el archivo de launch de ROS 2: <code>ros2 launch ros_gz_sim gz_sim.launch.py</code>.</p>
+  </div>
+
+  <!-- Q15 -->
+  <div class="quiz-question">
+    <p><span class="q-number">15.</span> ¿Cuál es el middleware de comunicación utilizado por ROS 2?</p>
+    <ul class="quiz-options">
+      <li>TCP/IP sockets</li>
+      <li>ZeroMQ</li>
+      <li>DDS (Data Distribution Service)</li>
+      <li>MQTT</li>
+    </ul>
+    <button class="btn btn-sm btn-outline-secondary mt-2 btn-show-answer">Mostrar respuesta</button>
+    <p class="mt-2 d-none"><strong>Respuesta: c)</strong> ROS 2 utiliza DDS (<em>Data Distribution Service</em>) como middleware de comunicación, un estándar industrial de OMG que soporta comunicación en tiempo real, descubrimiento automático de nodos y QoS configurable.</p>
+  </div>
+</section>
+
+<!-- ================================================================
+     BIBLIOGRAFÍA
+     ================================================================ -->
+<section id="bibliografia" class="mt-5">
+  <h2><i class="bi bi-bookmark-star me-2"></i>Bibliografía</h2>
+
+  <div class="bib-entry">
+    <strong>[1]</strong> Open Robotics. <em>ROS 2 Documentation — Jazzy Jalisco.</em>
+    <br><a href="https://docs.ros.org/en/jazzy/" target="_blank" rel="noopener">https://docs.ros.org/en/jazzy/</a>
+  </div>
+
+  <div class="bib-entry">
+    <strong>[2]</strong> Open Robotics. <em>Installing ROS 2 Jazzy Jalisco on Ubuntu 24.04.</em>
+    <br><a href="https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html" target="_blank" rel="noopener">https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html</a>
+  </div>
+
+  <div class="bib-entry">
+    <strong>[3]</strong> Open Robotics. <em>Gazebo Harmonic Documentation.</em>
+    <br><a href="https://gazebosim.org/docs/harmonic/" target="_blank" rel="noopener">https://gazebosim.org/docs/harmonic/</a>
+  </div>
+
+  <div class="bib-entry">
+    <strong>[4]</strong> Open Robotics. <em>ROS 2 — Gazebo Integration (ros_gz).</em>
+    <br><a href="https://github.com/gazebosim/ros_gz" target="_blank" rel="noopener">https://github.com/gazebosim/ros_gz</a>
+  </div>
+
+  <div class="bib-entry">
+    <strong>[5]</strong> Canonical Ltd. <em>Ubuntu 24.04 LTS (Noble Numbat) Release Notes.</em>
+    <br><a href="https://discourse.ubuntu.com/t/noble-numbat-release-notes/39890" target="_blank" rel="noopener">https://discourse.ubuntu.com/t/noble-numbat-release-notes/39890</a>
+  </div>
+
+  <div class="bib-entry">
+    <strong>[6]</strong> Microsoft. <em>Windows Subsystem for Linux Documentation.</em>
+    <br><a href="https://learn.microsoft.com/en-us/windows/wsl/" target="_blank" rel="noopener">https://learn.microsoft.com/en-us/windows/wsl/</a>
+  </div>
+
+  <div class="bib-entry">
+    <strong>[7]</strong> Microsoft. <em>WSLg — Windows Subsystem for Linux GUI.</em>
+    <br><a href="https://github.com/microsoft/wslg" target="_blank" rel="noopener">https://github.com/microsoft/wslg</a>
+  </div>
+
+  <div class="bib-entry">
+    <strong>[8]</strong> Open Robotics. <em>ROS 2 colcon Tutorial.</em>
+    <br><a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Colcon-Tutorial.html" target="_blank" rel="noopener">https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Colcon-Tutorial.html</a>
+  </div>
+
+  <div class="bib-entry">
+    <strong>[9]</strong> Open Robotics. <em>Creating a ROS 2 Package.</em>
+    <br><a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Creating-Your-First-ROS2-Package.html" target="_blank" rel="noopener">https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Creating-Your-First-ROS2-Package.html</a>
+  </div>
+
+  <div class="bib-entry">
+    <strong>[10]</strong> Open Robotics. <em>ROS 2 Jazzy Jalisco Release Page.</em>
+    <br><a href="https://docs.ros.org/en/jazzy/Releases/Release-Jazzy-Jalisco.html" target="_blank" rel="noopener">https://docs.ros.org/en/jazzy/Releases/Release-Jazzy-Jalisco.html</a>
+  </div>
+</section>
+
+<!-- ================================================================
+     CHAPTER NAVIGATION
+     ================================================================ -->
+<nav class="chapter-nav">
+  <a href="capitulo-01.html" class="nav-prev">
+    <span class="nav-label"><i class="bi bi-arrow-left me-1"></i> Anterior</span>
+    <span class="nav-title">Capítulo 1 — Fundamentos de la Robótica</span>
+  </a>
+  <a href="capitulo-03.html" class="nav-next">
+    <span class="nav-label">Siguiente <i class="bi bi-arrow-right ms-1"></i></span>
+    <span class="nav-title">Capítulo 3 — Arquitectura de ROS 2</span>
+  </a>
+</nav>
+
+</div><!-- /.content-body -->
+</main>
+</div><!-- /.book-layout -->
+
+<!-- ================================================================
+     FOOTER
+     ================================================================ -->
+<footer class="book-footer">
+  <div class="container">
+    <p>Curso Completo de ROS 2 Jazzy + Gazebo Harmonic &mdash; Material educativo de uso libre.</p>
+    <p>Basado en la documentación oficial de <a href="https://www.ros.org/" target="_blank">ROS 2</a>, <a href="https://gazebosim.org/" target="_blank">Gazebo</a> y <a href="https://ubuntu.com/" target="_blank">Ubuntu</a>.</p>
+  </div>
+</footer>
+
+<!-- Back to Top -->
+<button id="btnTop" class="btn-top" aria-label="Volver arriba"><i class="bi bi-chevron-up"></i></button>
+<!-- Sidebar Toggle (mobile) -->
+<button id="sidebarToggle" class="sidebar-toggle" aria-label="Abrir tabla de contenidos"><i class="bi bi-list"></i></button>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Book JS -->
+<script src="assets/js/book.js"></script>
+</body>
+</html>
