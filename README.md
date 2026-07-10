@@ -31,8 +31,8 @@ Curso de ROS/
 │   │   │   ├── ui.js            # Navegación, scrollspy, zoom, copiar
 │   │   │   └── quiz.js          # Autoevaluación interactiva
 │   │   ├── data/
-│   │   │   └── search-index.json # Índice de búsqueda global
-│   │   └── book-loader.js       # Layout Engine: ensambla la página
+│   │   │   └── search-index.js  # Índice de búsqueda global (JS compatible con file://)
+│   │   └── book-loader.js       # Layout Engine: ensambla la página (inline templates)
 │   ├── images/
 │   └── diagrams/
 ├── scripts/
@@ -118,7 +118,7 @@ Una vez que hayas subido el código a tu repositorio en GitHub, sigue estos paso
 * **Estructuración:** HTML5 Semántico
 * **Estilos:** Bootstrap 5.3.3 & CSS3 personalizado
 * **Iconografía:** Bootstrap Icons
-* **Programación Interactiva:** JavaScript (ES6 Módulos)
+* **Programación Interactiva:** JavaScript estándar (exposición global para compatibilidad offline/local)
 * **Fuentes Web:** Google Fonts (*Inter*, *Outfit*, *JetBrains Mono*)
 
 ---
@@ -141,7 +141,7 @@ Abre tu navegador en **http://localhost:8000**
 ```bash
 python scripts/generate-index.py
 ```
-Escanea `chapters/*.html` y `index.html` y regenera automáticamente `assets/js/data/search-index.json`. **Ejecuta este script cada vez que añadas un nuevo capítulo.**
+Escanea `chapters/*.html` y `index.html` y regenera automáticamente `assets/js/data/search-index.js`. **Ejecuta este script cada vez que añadas un nuevo capítulo.**
 
 ### Build de producción (minificar CSS)
 ```bash
@@ -158,8 +158,4 @@ por:
 <link href="./assets/css/book.min.css" rel="stylesheet">
 ```
 
-### Servidor de desarrollo
-```bash
-python scripts/serve.py
-```
-Inicia un servidor HTTP en `http://localhost:8000` (puerto configurable). **Necesario para desarrollo local** porque el Layout Engine usa `fetch()` para cargar los componentes.
+Inicia un servidor HTTP en `http://localhost:8000` (puerto configurable). Útil si prefieres usar un servidor local en lugar del protocolo `file://`.
