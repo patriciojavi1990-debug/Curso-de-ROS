@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Libro web interactivo completo para aprender ROS 2 Jazzy Jalisco y Gazebo Harmonic desde cero hasta nivel avanzado. Instalación, arquitectura, nodos, simulación y navegación.">
+  <meta name="keywords" content="ROS 2, Jazzy Jalisco, Gazebo Harmonic, robótica, tutorial, curso, WSL2, Ubuntu 24.04, simulación, SLAM">
+  <meta name="author" content="Curso Completo de ROS 2">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Curso Completo de ROS 2 Jazzy + Gazebo Harmonic">
+  <meta property="og:description" content="Libro web interactivo completo para aprender ROS 2 Jazzy Jalisco y Gazebo Harmonic desde cero hasta nivel avanzado.">
+  <meta property="og:type" content="book">
+  <meta property="og:url" content="https://patriciojavi1990-debug.github.io/Curso-de-ROS/">
+  <meta property="og:site_name" content="Curso Completo de ROS 2 Jazzy + Gazebo Harmonic">
+
+  <!-- JSON-LD Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Book",
+    "name": "Curso Completo de ROS 2 Jazzy + Gazebo Harmonic",
+    "description": "Libro web interactivo completo para aprender ROS 2 Jazzy Jalisco y Gazebo Harmonic desde cero hasta nivel avanzado.",
+    "author": {
+      "@type": "Organization",
+      "name": "Curso Completo de ROS 2"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Curso Completo de ROS 2"
+    },
+    "inLanguage": "es",
+    "educationalLevel": "Universitario / Autodidacta técnico",
+    "datePublished": "2024"
+  }
+  </script>
+
+  <title>Curso Completo de ROS 2 Jazzy + Gazebo Harmonic</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom Book Styles -->
+  <link href="./assets/css/book.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="book-navbar navbar navbar-expand-lg" role="navigation" aria-label="Navegación principal">
+  <div class="container-fluid px-3">
+    <a class="navbar-brand d-flex align-items-center" href="./index.html">
+      <i class="bi bi-robot me-2" style="font-size:1.4rem;color:var(--ros-primary)"></i>
+      Curso ROS 2 Jazzy
+    </a>
+    <div class="d-flex align-items-center gap-2">
+      <button class="btn btn-sm btn-outline-secondary d-flex align-items-center" id="themeToggle" aria-label="Cambiar tema">
+        <i class="bi bi-moon-stars"></i>
+      </button>
+      <a href="https://docs.ros.org/en/jazzy/" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary d-none d-md-inline-flex align-items-center gap-1">
+        <i class="bi bi-box-arrow-up-right"></i> Docs ROS 2
+      </a>
+      <a href="https://github.com/patriciojavi1990-debug/Curso-de-ROS" target="_blank" rel="noopener" class="btn btn-sm btn-dark d-inline-flex align-items-center gap-1">
+        <i class="bi bi-github"></i><span class="d-none d-sm-inline"> GitHub</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero / Portada -->
+<header class="chapter-header" style="min-height: 60vh; display:flex; align-items:center;">
+  <div class="container text-center">
+    <span class="chapter-number">Libro Web Interactivo</span>
+    <h1 style="font-size:3rem; max-width:800px; margin:0 auto 1rem;">Curso Completo de ROS 2 Jazzy + Gazebo Harmonic</h1>
+    <p class="chapter-subtitle" style="font-size:1.25rem;">Desde la instalación hasta la navegación autónoma. Material educativo universitario de código abierto.</p>
+    <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+      <a href="./chapters/capitulo-02.html" class="btn btn-light btn-lg px-4">
+        <i class="bi bi-play-fill me-2"></i>Comenzar Capítulo 2
+      </a>
+      <a href="https://github.com/patriciojavi1990-debug/Curso-de-ROS" target="_blank" rel="noopener" class="btn btn-outline-light btn-lg px-4">
+        <i class="bi bi-github me-2"></i>Ver en GitHub
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Contenido Principal -->
+<main class="container" style="max-width:900px; padding: 3rem 1.5rem;">
+
+  <section aria-labelledby="sobre-curso">
+    <h2 id="sobre-curso" class="mb-4"><i class="bi bi-journal-bookmark-fill me-2"></i>Sobre este curso</h2>
+    <p>Este libro web ha sido diseñado con estándares editoriales universitarios para la enseñanza de <strong>ROS 2 (Robot Operating System 2)</strong> desde cero hasta nivel avanzado. Abarca desde la instalación del entorno de desarrollo hasta la simulación en <strong>Gazebo Harmonic</strong>, pasando por la arquitectura de nodos, tópicos, servicios, URDF, SLAM y navegación autónoma.</p>
+    <p>El contenido está construido sobre tecnologías web modernas (HTML5 semántico, CSS3, JavaScript ES6) y se publica de forma gratuita a través de <strong>GitHub Pages</strong>, garantizando acceso universal y actualizaciones continuas.</p>
+  </section>
+
+  <section aria-labelledby="estructura" class="mt-5">
+    <h2 id="estructura" class="mb-4"><i class="bi bi-list-check me-2"></i>Estructura del contenido</h2>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="p-4 border rounded-3 h-100" style="border-color:var(--gray-200) !important;">
+          <h5 class="mb-3"><i class="bi bi-hdd-network me-2 text-primary"></i>Fase 1: Fundamentos</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><a href="./chapters/capitulo-02.html">Cap. 2 — Instalación del Entorno</a></li>
+            <li class="mb-2"><span class="text-muted">Cap. 3 — Arquitectura de ROS 2</span></li>
+            <li class="mb-2"><span class="text-muted">Cap. 4 — Nodos y Tópicos</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="p-4 border rounded-3 h-100" style="border-color:var(--gray-200) !important;">
+          <h5 class="mb-3"><i class="bi bi-box me-2 text-primary"></i>Fase 2: Simulación</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><span class="text-muted">Cap. 5 — URDF y Xacro</span></li>
+            <li class="mb-2"><span class="text-muted">Cap. 6 — Gazebo Harmonic</span></li>
+            <li class="mb-2"><span class="text-muted">Cap. 7 — Sensores y Plugins</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="p-4 border rounded-3 h-100" style="border-color:var(--gray-200) !important;">
+          <h5 class="mb-3"><i class="bi bi-cpu me-2 text-primary"></i>Fase 3: Desarrollo</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><span class="text-muted">Cap. 8 — Programación de Nodos</span></li>
+            <li class="mb-2"><span class="text-muted">Cap. 9 — Servicios y Acciones</span></li>
+            <li class="mb-2"><span class="text-muted">Cap. 10 — Parámetros y Launch</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="p-4 border rounded-3 h-100" style="border-color:var(--gray-200) !important;">
+          <h5 class="mb-3"><i class="bi bi-map me-2 text-primary"></i>Fase 4: Navegación</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><span class="text-muted">Cap. 11 — SLAM</span></li>
+            <li class="mb-2"><span class="text-muted">Cap. 12 — Nav2</span></li>
+            <li class="mb-2"><span class="text-muted">Cap. 13 — Proyecto Final</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="tecnologias" class="mt-5">
+    <h2 id="tecnologias" class="mb-4"><i class="bi bi-tools me-2"></i>Tecnologías y stack del proyecto</h2>
+    <div class="table-wrapper">
+      <table class="book-table">
+        <thead>
+          <tr><th>Capa</th><th>Tecnología</th><th>Versión / Notas</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Estructura</td><td>HTML5 Semántico</td><td>Secciones, landmarks ARIA, esquemas Schema.org</td></tr>
+          <tr><td>Estilos</td><td>Bootstrap 5 + CSS3</td><td>Grid, utilities, custom properties, modo oscuro nativo</td></tr>
+          <tr><td>Interactividad</td><td>JavaScript ES6 (módulos)</td><td>Buscador dinámico, temas, cuestionarios, scrollspy</td></tr>
+          <tr><td>Iconografía</td><td>Bootstrap Icons</td><td>1.11.3</td></tr>
+          <tr><td>Tipografía</td><td>Google Fonts</td><td>Inter, Outfit, JetBrains Mono</td></tr>
+          <tr><td>Hosting</td><td>GitHub Pages</td><td>Despliegue estático, gratuito, con CDN</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="empezar" class="mt-5 text-center">
+    <h2 id="empezar" class="mb-4"><i class="bi bi-rocket-takeoff me-2"></i>¿Listo para empezar?</h2>
+    <p class="mb-4">El curso asume conocimientos básicos de Linux y programación. Si nunca has instalado ROS 2, comienza directamente con el <strong>Capítulo 2</strong>, que te guiará paso a paso desde WSL2 hasta tener Gazebo Harmonic funcionando.</p>
+    <a href="./chapters/capitulo-02.html" class="btn btn-primary btn-lg px-5">
+      <i class="bi bi-play-fill me-2"></i>Ir al Capítulo 2
+    </a>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="book-footer mt-5 py-4 border-top" role="contentinfo">
+  <div class="container text-center text-muted">
+    <p class="mb-1">&copy; 2024 Curso Completo de ROS 2 Jazzy + Gazebo Harmonic. Todos los derechos reservados.</p>
+    <p class="small mb-0">Desarrollado con <i class="bi bi-heart-fill text-danger" aria-hidden="true"></i> para la comunidad robótica.</p>
+  </div>
+</footer>
+
+<!-- Back to Top -->
+<button id="btnTop" class="btn-top" aria-label="Volver arriba"><i class="bi bi-chevron-up"></i></button>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="./assets/js/modules/ui.js"></script>
+<script src="./assets/js/modules/theme.js"></script>
+<script>
+  if (window.ThemeModule) window.ThemeModule.init();
+  if (window.UiModule) window.UiModule.init();
+</script>
+</body>
+</html>

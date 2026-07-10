@@ -10,13 +10,38 @@ El libro está construido en HTML5 semántico, CSS3, JavaScript clásico (ES6) y
 
 ```text
 Curso de ROS/
+├── index.html                   # Página de inicio / Portada del libro
+├── chapters/                    # Capítulos del libro (HTML limpio, solo contenido)
+│   └── capitulo-02.html       # Capítulo 2: Instalación del Entorno de Desarrollo
+├── components/                  # Plantillas reutilizables (navbar, sidebar, footer)
+│   ├── navbar.html
+│   ├── sidebar.html
+│   └── footer.html
 ├── assets/
 │   ├── css/
-│   │   └── book.css      # Sistema de diseño, fuentes, colores y layouts
-│   └── js/
-│       └── book.js       # Buscador, copiado al portapapeles y cuestionarios interactivos
-├── capitulo-02.html      # Capítulo 2: Instalación del Entorno de Desarrollo
-└── README.md             # Instrucciones de despliegue y uso (este archivo)
+│   │   ├── variables.css        # Design System: colores, fuentes, espaciados
+│   │   ├── main.css             # Estilos globales y layouts
+│   │   ├── components.css       # Componentes (callouts, terminales, tablas)
+│   │   ├── themes.css           # Modo oscuro / claro
+│   │   └── book.css             # Importa todo el sistema de estilos
+│   ├── js/
+│   │   ├── modules/
+│   │   │   ├── search.js        # Módulo de búsqueda dinámica
+│   │   │   ├── theme.js         # Módulo de modo claro/oscuro
+│   │   │   ├── ui.js            # Navegación, scrollspy, zoom, copiar
+│   │   │   └── quiz.js          # Autoevaluación interactiva
+│   │   ├── data/
+│   │   │   └── search-index.json # Índice de búsqueda global
+│   │   └── book-loader.js       # Layout Engine: ensambla la página
+│   ├── images/
+│   └── diagrams/
+├── scripts/
+│   ├── generate-index.py        # Generador del índice de búsqueda
+│   ├── build.py                 # Minificador de CSS para producción
+│   └── serve.py                 # Servidor HTTP local para desarrollo
+├── .gitignore
+├── DEVELOPER_GUIDE.md
+└── README.md                    # Instrucciones de despliegue y uso
 ```
 
 ---
@@ -48,7 +73,7 @@ git add .
 ### Paso 4: Realizar el primer commit
 Guarda el estado actual de los archivos localmente:
 ```bash
-git commit -m "feat: estructura inicial, capitulo 2 e implementacion de buscador"
+git commit -m "feat: re-arquitectura modular, design system, modo oscuro, buscador dinamico"
 ```
 
 ### Paso 5: Renombrar la rama principal a `main`
@@ -84,7 +109,7 @@ Una vez que hayas subido el código a tu repositorio en GitHub, sigue estos paso
    * **Branch**: Selecciona la rama `main` y mantén la carpeta por defecto como `/ (root)`.
 5. Haz clic en **Save** (Guardar).
 6. Espera aproximadamente 1 a 2 minutos. GitHub generará un enlace público en la parte superior de esa misma sección de configuración, con un formato similar a:
-   `https://TU_USUARIO.github.io/TU_REPOSITORIO/capitulo-02.html`
+   `https://TU_USUARIO.github.io/TU_REPOSITORIO/`
 
 ---
 
@@ -93,5 +118,48 @@ Una vez que hayas subido el código a tu repositorio en GitHub, sigue estos paso
 * **Estructuración:** HTML5 Semántico
 * **Estilos:** Bootstrap 5.3.3 & CSS3 personalizado
 * **Iconografía:** Bootstrap Icons
-* **Programación Interactiva:** JavaScript (ES6)
+* **Programación Interactiva:** JavaScript (ES6 Módulos)
 * **Fuentes Web:** Google Fonts (*Inter*, *Outfit*, *JetBrains Mono*)
+
+---
+
+## 💻 Desarrollo Local
+
+✅ **El sitio funciona directamente con doble clic** (`file://`). El `book-loader.js` usa templates inline, por lo que no requiere servidor local ni `fetch()`.
+
+Si aún así prefieres usar un servidor local (recomendado para desarrollo):
+```bash
+python scripts/serve.py
+```
+Abre tu navegador en **http://localhost:8000**
+
+---
+
+## 🏗️ Scripts de Mantenimiento
+
+### Generar índice de búsqueda
+```bash
+python scripts/generate-index.py
+```
+Escanea `chapters/*.html` y `index.html` y regenera automáticamente `assets/js/data/search-index.json`. **Ejecuta este script cada vez que añadas un nuevo capítulo.**
+
+### Build de producción (minificar CSS)
+```bash
+python scripts/build.py
+```
+Concatena y minifica los 4 archivos CSS modulares (`variables.css`, `themes.css`, `main.css`, `components.css`) en un único `assets/css/book.min.css` (reducción típica del 25%).
+
+Para activar el CSS minificado en todos los HTML, reemplaza:
+```html
+<link href="./assets/css/book.css" rel="stylesheet">
+```
+por:
+```html
+<link href="./assets/css/book.min.css" rel="stylesheet">
+```
+
+### Servidor de desarrollo
+```bash
+python scripts/serve.py
+```
+Inicia un servidor HTTP en `http://localhost:8000` (puerto configurable). **Necesario para desarrollo local** porque el Layout Engine usa `fetch()` para cargar los componentes.

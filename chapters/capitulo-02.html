@@ -6,6 +6,38 @@
   <meta name="description" content="Capítulo 2: Instalación del Entorno de Desarrollo — ROS 2 Jazzy Jalisco, Gazebo Harmonic, WSL2, Ubuntu 24.04. Guía paso a paso con resolución de problemas reales.">
   <meta name="keywords" content="ROS 2, Jazzy Jalisco, Gazebo Harmonic, WSL2, Ubuntu 24.04, instalación, robotica, tutorial">
   <meta name="author" content="Curso Completo de ROS 2">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Capítulo 2 — Instalación del Entorno de Desarrollo | Curso ROS 2 Jazzy + Gazebo Harmonic">
+  <meta property="og:description" content="Guía completa de instalación paso a paso: WSL2, Ubuntu 24.04, ROS 2 Jazzy, RViz2, Gazebo Harmonic y Visual Studio Code.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://patriciojavi1990-debug.github.io/Curso-de-ROS/chapters/capitulo-02.html">
+  <meta property="og:site_name" content="Curso Completo de ROS 2 Jazzy + Gazebo Harmonic">
+
+  <!-- JSON-LD Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Capítulo 2 — Instalación del Entorno de Desarrollo",
+    "description": "Guía completa de instalación paso a paso: WSL2, Ubuntu 24.04, ROS 2 Jazzy, RViz2, Gazebo Harmonic y Visual Studio Code.",
+    "author": {
+      "@type": "Organization",
+      "name": "Curso Completo de ROS 2"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Curso Completo de ROS 2"
+    },
+    "inLanguage": "es",
+    "isPartOf": {
+      "@type": "Book",
+      "name": "Curso Completo de ROS 2 Jazzy + Gazebo Harmonic"
+    }
+  }
+  </script>
+
   <title>Capítulo 2 — Instalación del Entorno de Desarrollo | Curso ROS 2 Jazzy + Gazebo Harmonic</title>
 
   <!-- Bootstrap 5 CSS -->
@@ -13,87 +45,12 @@
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <!-- Custom Book Styles -->
-  <link href="assets/css/book.css" rel="stylesheet">
+  <link href="../assets/css/book.css" rel="stylesheet">
 </head>
 <body>
 
-<!-- ================================================================
-     NAVBAR
-     ================================================================ -->
-<nav class="book-navbar navbar navbar-expand-lg">
-  <div class="container-fluid px-3">
-    <a class="navbar-brand d-flex align-items-center" href="index.html">
-      <i class="bi bi-robot me-2" style="font-size:1.4rem;color:var(--ros-primary)"></i>
-      Curso ROS 2 Jazzy
-    </a>
-    
-    <!-- Buscador de capítulos y secciones -->
-    <div class="search-wrapper mx-auto d-none d-md-block">
-      <i class="bi bi-search search-icon"></i>
-      <input type="text" id="bookSearchInput" class="form-control search-input" placeholder="Buscar capítulos o secciones..." autocomplete="off">
-      <div id="bookSearchResults" class="search-results-dropdown"></div>
-    </div>
+<div id="chapter-root">
 
-    <div class="d-flex align-items-center gap-2">
-      <a href="https://docs.ros.org/en/jazzy/" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary d-none d-md-inline-flex align-items-center gap-1">
-        <i class="bi bi-box-arrow-up-right"></i> Docs ROS 2
-      </a>
-      <a href="https://github.com/" target="_blank" rel="noopener" class="btn btn-sm btn-dark d-inline-flex align-items-center gap-1">
-        <i class="bi bi-github"></i><span class="d-none d-sm-inline"> GitHub</span>
-      </a>
-    </div>
-  </div>
-</nav>
-
-<!-- Sidebar Overlay (mobile) -->
-<div id="sidebarOverlay" class="sidebar-overlay"></div>
-
-<!-- ================================================================
-     LAYOUT
-     ================================================================ -->
-<div class="book-layout">
-
-<!-- ================================================================
-     SIDEBAR — Table of Contents
-     ================================================================ -->
-<aside id="bookSidebar" class="book-sidebar">
-  <p class="toc-title">Contenido del capítulo</p>
-  <ul class="toc-nav">
-    <li><a href="#introduccion">Introducción</a></li>
-    <li><a href="#objetivos">Objetivos</a></li>
-    <li><a href="#requisitos">Requisitos mínimos</a></li>
-    <li><a href="#arquitectura">Arquitectura del sistema</a></li>
-    <li class="mt-2"><a href="#paso1"><strong>Paso 1</strong> — Instalar WSL2</a></li>
-    <li><a href="#paso2"><strong>Paso 2</strong> — Instalar Ubuntu 24.04</a></li>
-    <li><a href="#paso3"><strong>Paso 3</strong> — Verificar Ubuntu</a></li>
-    <li><a href="#paso4"><strong>Paso 4</strong> — Herramientas necesarias</a></li>
-    <li><a href="#paso5"><strong>Paso 5</strong> — Configurar Locale</a></li>
-    <li><a href="#paso6"><strong>Paso 6</strong> — Repositorio de ROS 2</a></li>
-    <li><a href="#paso7"><strong>Paso 7</strong> — Instalar ROS 2 Jazzy</a></li>
-    <li><a href="#paso8"><strong>Paso 8</strong> — Configurar ROS</a></li>
-    <li><a href="#paso9"><strong>Paso 9</strong> — Inicializar rosdep</a></li>
-    <li><a href="#paso10"><strong>Paso 10</strong> — Probar ROS</a></li>
-    <li><a href="#paso11"><strong>Paso 11</strong> — Visual Studio Code</a></li>
-    <li><a href="#paso12"><strong>Paso 12</strong> — Crear Workspace</a></li>
-    <li><a href="#paso13"><strong>Paso 13</strong> — Crear paquete Python</a></li>
-    <li><a href="#paso14"><strong>Paso 14</strong> — Ejecutar RViz2</a></li>
-    <li><a href="#paso15"><strong>Paso 15</strong> — Instalar Gazebo Harmonic</a></li>
-    <li class="mt-2"><a href="#problemas">Problemas encontrados</a></li>
-    <li><a href="#buenas-practicas">Buenas prácticas</a></li>
-    <li><a href="#resumen">Resumen</a></li>
-    <li><a href="#laboratorio">Laboratorio</a></li>
-    <li><a href="#ejercicios">Ejercicios</a></li>
-    <li><a href="#cuestionario">Cuestionario</a></li>
-    <li><a href="#bibliografia">Bibliografía</a></li>
-  </ul>
-</aside>
-
-<!-- ================================================================
-     MAIN CONTENT
-     ================================================================ -->
-<main class="book-content">
-
-<!-- Chapter Header -->
 <header class="chapter-header">
   <div class="container">
     <span class="chapter-number">Capítulo 2</span>
@@ -101,8 +58,6 @@
     <p class="chapter-subtitle">WSL2 · Ubuntu 24.04 · ROS 2 Jazzy · Gazebo Harmonic · RViz2 · VS Code</p>
   </div>
 </header>
-
-<div class="content-body">
 
 <!-- ================================================================
      INTRODUCCIÓN
@@ -1816,39 +1771,19 @@ tree -L 2</code></pre>
 <!-- ================================================================
      CHAPTER NAVIGATION
      ================================================================ -->
-<nav class="chapter-nav">
-  <a href="capitulo-01.html" class="nav-prev">
-    <span class="nav-label"><i class="bi bi-arrow-left me-1"></i> Anterior</span>
+<nav class="chapter-nav" aria-label="Navegación entre capítulos">
+  <a href="./capitulo-01.html" class="nav-prev" rel="prev">
+    <span class="nav-label"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i> Anterior</span>
     <span class="nav-title">Capítulo 1 — Fundamentos de la Robótica</span>
   </a>
-  <a href="capitulo-03.html" class="nav-next">
-    <span class="nav-label">Siguiente <i class="bi bi-arrow-right ms-1"></i></span>
+  <a href="./capitulo-03.html" class="nav-next" rel="next">
+    <span class="nav-label">Siguiente <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></span>
     <span class="nav-title">Capítulo 3 — Arquitectura de ROS 2</span>
   </a>
 </nav>
 
-</div><!-- /.content-body -->
-</main>
-</div><!-- /.book-layout -->
+</div><!-- /#chapter-root -->
 
-<!-- ================================================================
-     FOOTER
-     ================================================================ -->
-<footer class="book-footer">
-  <div class="container">
-    <p>Curso Completo de ROS 2 Jazzy + Gazebo Harmonic &mdash; Material educativo de uso libre.</p>
-    <p>Basado en la documentación oficial de <a href="https://www.ros.org/" target="_blank">ROS 2</a>, <a href="https://gazebosim.org/" target="_blank">Gazebo</a> y <a href="https://ubuntu.com/" target="_blank">Ubuntu</a>.</p>
-  </div>
-</footer>
-
-<!-- Back to Top -->
-<button id="btnTop" class="btn-top" aria-label="Volver arriba"><i class="bi bi-chevron-up"></i></button>
-<!-- Sidebar Toggle (mobile) -->
-<button id="sidebarToggle" class="sidebar-toggle" aria-label="Abrir tabla de contenidos"><i class="bi bi-list"></i></button>
-
-<!-- Bootstrap 5 JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Book JS -->
-<script src="assets/js/book.js"></script>
+<script src="../assets/js/book-loader.js"></script>
 </body>
 </html>

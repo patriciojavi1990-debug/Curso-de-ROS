@@ -1,0 +1,72 @@
+/* ============================================================
+   Design System — variables.css
+   Variables CSS globales del Curso de ROS 2
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* ---------- Paleta ROS (HSL) ---------- */
+  --ros-primary: hsl(207, 90%, 54%);
+  --ros-primary-dark: hsl(207, 79%, 42%);
+  --ros-accent: hsl(187, 100%, 42%);
+  --ros-info: hsl(199, 91%, 56%);
+  --ros-success: hsl(122, 39%, 49%);
+  --ros-warning: hsl(36, 100%, 50%);
+  --ros-danger: hsl(4, 90%, 58%);
+
+  /* ---------- Escala de Grises ---------- */
+  --gray-50:  #F8FAFC;
+  --gray-100: #F1F5F9;
+  --gray-200: #E2E8F0;
+  --gray-300: #CBD5E1;
+  --gray-400: #94A3B8;
+  --gray-500: #64748B;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1E293B;
+  --gray-900: #0F172A;
+
+  /* ---------- Fondos del tema claro ---------- */
+  --bg-body:    #FFFFFF;
+  --bg-sidebar: hsl(210, 17%, 98%);
+  --bg-code:    #1E1E2E;
+  --bg-code-inline: #F1F5F9;
+  --bg-step-header: var(--ros-primary-dark);
+
+  /* ---------- Callouts ---------- */
+  --bg-callout-note:    #EFF6FF; /* blue-50 */
+  --border-callout-note: #3B82F6;
+  --bg-callout-tip:     #F0FDF4; /* green-50 */
+  --border-callout-tip: #22C55E;
+  --bg-callout-warning: #FFFBEB; /* amber-50 */
+  --border-callout-warning: #F59E0B;
+  --bg-callout-danger:  #FEF2F2; /* red-50 */
+  --border-callout-danger: #EF4444;
+  --bg-callout-info:    #F0F9FF; /* sky-50 */
+  --border-callout-info: #0EA5E9;
+
+  /* ---------- Tipografía ---------- */
+  --font-body:    'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Outfit', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+
+  /* ---------- Layout ---------- */
+  --sidebar-width: 260px;
+  --content-max-width: 860px;
+
+  /* ---------- Sombras ---------- */
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+  --shadow-code: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.15);
+
+  /* ---------- Radios ---------- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* ---------- Transiciones ---------- */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+}
