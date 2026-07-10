@@ -462,8 +462,18 @@ Codename:       noble</code></pre>
 <section id="paso8" class="step-section">
   <div class="step-badge"><i class="bi bi-8-circle-fill"></i> Paso 8</div>
   <h2>Instalar herramientas básicas del sistema</h2>
-  <p>Instale las herramientas fundamentales que se usarán durante todo el curso. Estas son necesarias para agregar repositorios, descargar archivos y compilar software.</p>
 
+  <p>En este paso instalaremos <strong>únicamente</strong> las herramientas básicas del sistema operativo. Estas son dependencias necesarias para agregar repositorios, descargar archivos, compilar software y gestionar código fuente durante todo el curso.</p>
+
+  <div class="callout callout-info">
+    <div class="callout-icon"><i class="bi bi-info-circle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Alcance de este paso</strong>
+      <p>Este paso instala <strong>solo herramientas genéricas de Ubuntu</strong>. Las herramientas específicas de ROS 2 (<code>colcon</code>, <code>rosdep</code>, <code>vcstool</code>) <strong>NO se instalan aquí</strong> porque aún no hemos agregado el repositorio oficial de ROS 2. Su instalación se realiza en el <a href="#paso13">Paso 13</a>, después de instalar <code>ros-jazzy-desktop</code>.</p>
+    </div>
+  </div>
+
+  <h3>Comando de instalación</h3>
   <div class="code-block-wrapper">
     <div class="code-block-header">
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
@@ -481,19 +491,120 @@ Codename:       noble</code></pre>
   python3-pip</code></pre>
   </div>
 
+  <p>La opción <code>-y</code> confirma automáticamente la instalación. La descarga aproximada es de <strong>200 MB</strong> y puede tardar entre 1 y 3 minutos según la conexión.</p>
+
+  <h3>Descripción detallada de cada paquete</h3>
+  <p>La siguiente tabla describe la función específica de cada herramienta y por qué es indispensable en este curso.</p>
+
   <div class="table-wrapper">
     <table class="book-table">
-      <thead><tr><th>Paquete</th><th>Descripción</th></tr></thead>
+      <thead><tr><th>Paquete</th><th>Descripción</th><th>Uso en el curso</th></tr></thead>
       <tbody>
-        <tr><td><code>ca-certificates</code></td><td>Certificados de autoridades certificadoras para validar conexiones HTTPS.</td></tr>
-        <tr><td><code>gnupg2</code></td><td>GNU Privacy Guard. Herramienta de cifrado y firma digital. Se usa para verificar la llave GPG de ROS 2.</td></tr>
-        <tr><td><code>curl</code></td><td>Cliente HTTP/HTTPS de línea de comandos. Se usa para descargar la llave GPG de ROS 2.</td></tr>
-        <tr><td><code>git</code></td><td>Sistema de control de versiones distribuido. Imprescindible para clonar repositorios de paquetes de ROS 2.</td></tr>
-        <tr><td><code>wget</code></td><td>Alternativa a <code>curl</code> para descarga de archivos desde la web.</td></tr>
-        <tr><td><code>tree</code></td><td>Muestra la estructura de directorios en forma de árbol. Útil para inspeccionar workspaces.</td></tr>
-        <tr><td><code>build-essential</code></td><td>Metapaquete con <code>gcc</code>, <code>g++</code>, <code>make</code> y herramientas de compilación C/C++.</td></tr>
-        <tr><td><code>software-properties-common</code></td><td>Proporciona <code>add-apt-repository</code> para agregar repositorios.</td></tr>
-        <tr><td><code>python3-pip</code></td><td>Gestor de paquetes de Python 3.</td></tr>
+        <tr>
+          <td><code>ca-certificates</code></td>
+          <td>Almacén de certificados digitales de autoridades certificadoras (CA) confiables.</td>
+          <td>Valida las conexiones HTTPS al descargar la llave GPG y los paquetes de ROS 2 desde los repositorios oficiales.</td>
+        </tr>
+        <tr>
+          <td><code>gnupg2</code></td>
+          <td>GNU Privacy Guard versión 2. Implementación libre de OpenPGP para cifrado y firma digital.</td>
+          <td>Verifica la autenticidad de la llave GPG de ROS 2 que se descarga en el <a href="#paso11">Paso 11</a>.</td>
+        </tr>
+        <tr>
+          <td><code>curl</code></td>
+          <td>Cliente HTTP/HTTPS de línea de comandos con soporte para redirecciones, autenticación y cookies.</td>
+          <td>Descarga la llave GPG de ROS 2 desde <code>raw.githubusercontent.com</code> en el <a href="#paso11">Paso 11</a>.</td>
+        </tr>
+        <tr>
+          <td><code>git</code></td>
+          <td>Sistema de control de versiones distribuido creado por Linus Torvalds.</td>
+          <td>Permite clonar repositorios de paquetes de ROS 2 y gestionar el código fuente de su propio workspace.</td>
+        </tr>
+        <tr>
+          <td><code>wget</code></td>
+          <td>Descargador de archivos no interactivo desde la web mediante HTTP, HTTPS y FTP.</td>
+          <td>Alternativa a <code>curl</code> para descarga directa de archivos en scripts automatizados.</td>
+        </tr>
+        <tr>
+          <td><code>tree</code></td>
+          <td>Muestra la estructura de directorios en forma de árbol jerárquico con sangría.</td>
+          <td>Inspecciona la estructura del workspace <code>~/ros2_ws</code> después de compilar con <code>colcon</code>.</td>
+        </tr>
+        <tr>
+          <td><code>build-essential</code></td>
+          <td>Metapaquete que incluye <code>gcc</code>, <code>g++</code>, <code>make</code>, <code>libc-dev</code> y <code>dpkg-dev</code>.</td>
+          <td>Necesario para compilar paquetes de ROS 2 escritos en C++ desde el código fuente.</td>
+        </tr>
+        <tr>
+          <td><code>software-properties-common</code></td>
+          <td>Proporciona el comando <code>add-apt-repository</code> y la gestión de PPA.</td>
+          <td>Permite habilitar el repositorio <code>universe</code> de Ubuntu y agregar el repositorio oficial de ROS 2.</td>
+        </tr>
+        <tr>
+          <td><code>python3-pip</code></td>
+          <td>Gestor de paquetes oficial de Python 3. Permite instalar módulos desde PyPI.</td>
+          <td>Instala dependencias Python adicionales para nodos de ROS 2 y herramientas de desarrollo.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Verificación</h3>
+  <p>Después de completar la instalación, ejecute los siguientes comandos para confirmar que cada herramienta está disponible en el sistema.</p>
+
+  <h4>Verificar <code>git</code></h4>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>git --version</code></pre>
+  </div>
+
+  <p><strong>Salida esperada:</strong> una línea con el formato <code>git version 2.43.X</code> (la versión puede variar según la actualización de Ubuntu 24.04).</p>
+
+  <h4>Verificar <code>curl</code></h4>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>curl --version</code></pre>
+  </div>
+
+  <p><strong>Salida esperada:</strong> primera línea con el formato <code>curl 8.X.X (...)</code>, seguida de una lista de protocolos soportados.</p>
+
+  <h4>Verificar <code>python3</code></h4>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>python3 --version</code></pre>
+  </div>
+
+  <p><strong>Salida esperada:</strong> <code>Python 3.12.3</code> (la versión exacta de Python preinstalada en Ubuntu 24.04 LTS, que es la requerida por ROS 2 Jazzy).</p>
+
+  <h4>Verificar <code>pip3</code></h4>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>pip3 --version</code></pre>
+  </div>
+
+  <p><strong>Salida esperada:</strong> una línea con el formato <code>pip 24.X from /usr/lib/python3/dist-packages/pip (python 3.12)</code>.</p>
+
+  <h4>Tabla resumen de verificación</h4>
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead><tr><th>Comando</th><th>Salida esperada</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr><td><code>git --version</code></td><td><code>git version 2.43.X</code></td><td>✅ Debe mostrar la versión</td></tr>
+        <tr><td><code>curl --version</code></td><td><code>curl 8.X.X (...)</code></td><td>✅ Debe listar protocolos</td></tr>
+        <tr><td><code>python3 --version</code></td><td><code>Python 3.12.3</code></td><td>✅ Versión LTS compatible con Jazzy</td></tr>
+        <tr><td><code>pip3 --version</code></td><td><code>pip 24.X ...</code></td><td>✅ Gestor funcional</td></tr>
       </tbody>
     </table>
   </div>
@@ -501,8 +612,111 @@ Codename:       noble</code></pre>
   <div class="callout callout-danger">
     <div class="callout-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
     <div class="callout-body">
-      <strong>NO instalar todavía: <code>python3-colcon-common-extensions</code></strong>
-      <p>Durante las pruebas de este curso se detectó que instalar <code>colcon</code> en este paso (antes de configurar el repositorio de ROS 2) puede producir errores de "paquete no encontrado" o versiones incompatibles. La instalación correcta de las herramientas de ROS se realiza en el <strong>Paso 13</strong>, después de instalar <code>ros-jazzy-desktop</code>.</p>
+      <strong>No instale todavía los siguientes paquetes:</strong>
+      <ul>
+        <li><code>python3-colcon-common-extensions</code></li>
+        <li><code>python3-rosdep</code></li>
+        <li><code>python3-vcstool</code></li>
+      </ul>
+      <p>Estos paquetes <strong>se instalarán después</strong> de configurar el repositorio oficial de ROS 2 y de instalar <code>ros-jazzy-desktop</code>. La instalación correcta se realiza en el <a href="#paso13">Paso 13</a>.</p>
+    </div>
+  </div>
+
+  <h3>¿Qué hacer si un paquete no se encuentra?</h3>
+  <p>Si al ejecutar el comando de instalación aparece el error <code>E: Unable to locate package &lt;nombre&gt;</code>, significa que <code>apt</code> no tiene un índice actualizado que contenga ese paquete. Siga el siguiente procedimiento de diagnóstico.</p>
+
+  <h4>Error típico</h4>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida de error</span>
+    </div>
+    <pre><code>Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+E: Unable to locate package python3-colcon-common-extensions
+E: Unable to locate package python3-rosdep
+E: Unable to locate package python3-vcstool</code></pre>
+  </div>
+
+  <h4>Procedimiento de solución</h4>
+
+  <p><strong>Paso 1.</strong> Actualice el índice de paquetes:</p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>sudo apt update</code></pre>
+  </div>
+
+  <p><strong>Paso 2.</strong> Verifique que el repositorio <code>universe</code> esté habilitado. Si no lo está, agréguelo:</p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>sudo add-apt-repository universe
+sudo apt update</code></pre>
+  </div>
+
+  <p><strong>Paso 3.</strong> Busque el paquete en los repositorios disponibles:</p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>apt search nombre_del_paquete</code></pre>
+  </div>
+
+  <p>Por ejemplo: <code>apt search colcon</code>. Si la salida muestra resultados, el paquete existe y puede instalarlo. Si no aparece nada, confirme que el repositorio correcto está habilitado.</p>
+
+  <p><strong>Paso 4.</strong> Identifique si el paquete pertenece al ecosistema de ROS 2.</p>
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead><tr><th>Paquete</th><th>Origen</th><th>¿Aparece en este paso?</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>python3-colcon-common-extensions</code></td>
+          <td>Repositorio oficial de ROS 2 (<code>packages.ros.org</code>)</td>
+          <td>❌ <strong>No todavía</strong>. Se instala en el <a href="#paso13">Paso 13</a>.</td>
+        </tr>
+        <tr>
+          <td><code>python3-rosdep</code></td>
+          <td>Repositorio oficial de ROS 2</td>
+          <td>❌ <strong>No todavía</strong>. Se instala en el <a href="#paso13">Paso 13</a>.</td>
+        </tr>
+        <tr>
+          <td><code>python3-vcstool</code></td>
+          <td>Repositorio oficial de ROS 2</td>
+          <td>❌ <strong>No todavía</strong>. Se instala en el <a href="#paso13">Paso 13</a>.</td>
+        </tr>
+        <tr>
+          <td><code>git</code>, <code>curl</code>, <code>wget</code></td>
+          <td>Repositorios <code>main</code> / <code>universe</code> de Ubuntu</td>
+          <td>✅ Debe instalarse en este paso.</td>
+        </tr>
+        <tr>
+          <td><code>build-essential</code>, <code>tree</code></td>
+          <td>Repositorio <code>main</code> de Ubuntu</td>
+          <td>✅ Debe instalarse en este paso.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-success">
+    <div class="callout-icon"><i class="bi bi-check-circle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Si los paquetes faltantes son de ROS 2, es normal</strong>
+      <p>Los paquetes <code>python3-colcon-common-extensions</code>, <code>python3-rosdep</code> y <code>python3-vcstool</strong> aún no existen en este punto del procedimiento porque el repositorio oficial de ROS 2 todavía no ha sido agregado (se hace en el <a href="#paso11">Paso 11</a>). No intente instalarlos ahora. Continúe con los pasos 9 a 12 y luego instale las herramientas de ROS en el <a href="#paso13">Paso 13</a>.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-warning">
+    <div class="callout-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Nota técnica sobre esta corrección</strong>
+      <p>Esta sección fue modificada durante la validación del libro porque, en una instalación completamente limpia de Ubuntu 24.04 LTS sobre WSL2, se detectó que los paquetes <code>python3-colcon-common-extensions</code>, <code>python3-rosdep</code> y <code>python3-vcstool</strong> devuelven <code>E: Unable to locate package</code> hasta que el repositorio oficial de ROS 2 está correctamente configurado. La instalación de estas herramientas específicas de ROS se realiza en el <a href="#paso13">Paso 13</a>, después de instalar <code>ros-jazzy-desktop</code>, garantizando la trazabilidad completa y reproducible del entorno.</p>
     </div>
   </div>
 </section>
