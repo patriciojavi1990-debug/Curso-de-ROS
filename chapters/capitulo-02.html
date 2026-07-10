@@ -982,7 +982,21 @@ export LANG=en_US.UTF-8</code></pre>
     <pre><code>source ~/.bashrc</code></pre>
   </div>
 
-  <h3>Verificar la instalación</h3>
+  <h2>Verificar que ROS 2 está correctamente instalado</h2>
+
+  <p>ROS 2 no incluye un comando <code>ros2 --version</code>. Si lo ejecuta obtendrá <code>ros2: error: unrecognized arguments: --version</code>, lo cual <strong>no es un error de instalación</strong>: simplemente ese argumento no forma parte de la interfaz oficial. La verificación debe realizarse mediante un conjunto de comandos que validan el entorno, el ejecutable, los paquetes y la configuración del sistema.</p>
+
+  <div class="callout callout-info">
+    <div class="callout-icon"><i class="bi bi-info-circle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Nota sobre la verificación</strong>
+      <p>Durante la validación del libro se descubrió que el comando <code>ros2 --version</code> no forma parte de la interfaz oficial de ROS 2. Por ello, esta sección fue reemplazada por un conjunto de verificaciones más completas y confiables.</p>
+    </div>
+  </div>
+
+  <h3>1. Verificar la distribución activa</h3>
+  <p>La variable de entorno <code>ROS_DISTRO</code> identifica la distribución de ROS 2 actualmente cargada en el entorno. Fue establecida por el archivo <code>setup.bash</code> en el paso anterior.</p>
+
   <div class="code-block-wrapper">
     <div class="code-block-header">
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
@@ -999,16 +1013,20 @@ export LANG=en_US.UTF-8</code></pre>
     <pre><code>jazzy</code></pre>
   </div>
 
-  <p>Verificar la versión de ROS 2:</p>
+  <p>Si la salida muestra <code>jazzy</code>, el entorno ROS 2 Jazzy está correctamente cargado. Si no aparece ningún valor, ejecute manualmente:</p>
   <div class="code-block-wrapper">
     <div class="code-block-header">
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
       <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
     </div>
-    <pre><code>ros2 --version</code></pre>
+    <pre><code>source /opt/ros/jazzy/setup.bash</code></pre>
   </div>
 
-  <p>Verificar la ruta del ejecutable:</p>
+  <p>Y verifique que agregó la línea <code>source /opt/ros/jazzy/setup.bash</code> al archivo <code>~/.bashrc</code> en el paso anterior.</p>
+
+  <h3>2. Verificar la ubicación del ejecutable</h3>
+  <p>Confirme que el ejecutable <code>ros2</code> se encuentra en la ruta de instalación oficial.</p>
+
   <div class="code-block-wrapper">
     <div class="code-block-header">
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
@@ -1023,6 +1041,300 @@ export LANG=en_US.UTF-8</code></pre>
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
     </div>
     <pre><code>/opt/ros/jazzy/bin/ros2</code></pre>
+  </div>
+
+  <p>Este comando confirma que el binario <code>ros2</code> se resolvió correctamente desde el <code>PATH</code> y apunta a la instalación oficial bajo <code>/opt/ros/jazzy/</code>.</p>
+
+  <h3>3. Verificar que la CLI funciona</h3>
+  <p>Ejecute <code>ros2</code> sin argumentos para mostrar la ayuda general y la lista de subcomandos disponibles.</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>ros2</code></pre>
+  </div>
+
+  <p><strong>Salida esperada (extracto):</strong></p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
+    </div>
+    <pre><code>usage: ros2 [-h] [--use-python-default-locale] Call `ros2 &lt;command&gt;` -h for more detailed usage. ...
+
+ros2 is an extensible command-line tool for ROS 2.
+
+Common commands:
+  action       Various action related sub-commands
+  bag          Various bag related sub-commands
+  component    Various component related sub-commands
+  daemon       Various daemon related sub-commands
+  doctor       Check ROS 2 setup and other potential issues
+  interface    Show information about ROS 2 interfaces
+  launch       Run a launch file
+  lifecycle    Various lifecycle related sub-commands
+  multicast    Various multicast related sub-commands
+  node         Various node related sub-commands
+  param        Various param related sub-commands
+  pkg          Various package related sub-commands
+  run          Run a specific ROS 2 node
+  security     Various security related sub-commands
+  service      Various service related sub-commands
+  topic        Various topic related sub-commands
+  wtf          Use `wtf` as a prefix to find out `why` things aren't working
+
+See `ros2 &lt;command&gt; -h` for more information on a specific command.</code></pre>
+  </div>
+
+  <p>Si ve esta lista de subcomandos, la CLI de ROS 2 está correctamente instalada. <strong>No es un error</strong> que aparezca la pantalla de ayuda: significa que el comando se ejecutó sin argumentos.</p>
+
+  <h3>4. Verificar el estado de ROS</h3>
+  <p>ROS Doctor analiza el entorno y reporta posibles problemas con la plataforma, la red, el middleware DDS y los nodos activos.</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>ros2 doctor</code></pre>
+  </div>
+
+  <p><strong>Salida esperada (extracto):</strong></p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
+    </div>
+    <pre><code>&lt;UserWarning&gt; [--interactive] is not set. Use `--interactive` to run doctor in interactive mode.
+  All 6 checks passed (1 warning)
+
+  PLATFORM
+  ok    Platform.UNIX.LINUX.OK
+  ok    Platform.UNIX.DISTRO.OK
+
+  NETWORK
+  ok    Network.ROS2_DAEMON.OK
+
+  ...</code></pre>
+  </div>
+
+  <p>El resultado esperado es <code>All N checks passed</code>. Las advertencias (warning) no son críticas y pueden ignorarse si están relacionadas con la versión de <code>rclpy</code> o con el daemon de ROS 2. Si aparecen errores (error), revise la sección <em>Errores comunes</em> al final de este paso.</p>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon"><i class="bi bi-lightbulb-fill"></i></div>
+    <div class="callout-body">
+      <strong>Advertencias que pueden ignorarse</strong>
+      <ul>
+        <li><code>rclpy &lt;version&gt; in use is not the recommended one</code> — versión menor de la API.</li>
+        <li><code>ros2 daemon not running</code> — el daemon se inicia automáticamente al primer uso.</li>
+        <li><code>no action server found</code> — no hay acciones activas en este momento.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>5. Verificar los paquetes instalados</h3>
+  <p>Liste los primeros paquetes disponibles en el entorno ROS 2.</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>ros2 pkg list | head</code></pre>
+  </div>
+
+  <p><strong>Salida esperada (extracto):</strong></p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
+    </div>
+    <pre><code>action_msgs
+ament_cmake
+ament_index_cpp
+ament_lint
+ament_package
+builtin_interfaces
+demo_nodes_cpp
+demo_nodes_py
+geometry_msgs
+nav_msgs
+rcl_interfaces
+rclcpp
+rclpy
+ros2cli
+ros_base
+rosidl_default_runtime
+std_msgs
+std_srvs
+...</code></pre>
+  </div>
+
+  <p>Deben aparecer paquetes fundamentales como <code>action_msgs</code>, <code>builtin_interfaces</code>, <code>geometry_msgs</code>, <code>std_msgs</code> y los runtimes de cliente (<code>rclpy</code> para Python, <code>rclcpp</code> para C++).</p>
+
+  <h3>6. Verificar los paquetes de demostración</h3>
+  <p>Confirme que los nodos de demostración (necesarios para la prueba Talker/Listener) están disponibles.</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>ros2 pkg list | grep demo</code></pre>
+  </div>
+
+  <p><strong>Salida esperada:</strong></p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
+    </div>
+    <pre><code>demo_nodes_cpp
+demo_nodes_py</code></pre>
+  </div>
+
+  <p>Ambos paquetes deben estar presentes. <code>demo_nodes_cpp</code> contiene nodos de ejemplo escritos en C++ (como <code>talker</code>) y <code>demo_nodes_py</code> contiene los equivalentes en Python (como <code>listener</code>).</p>
+
+  <h3>7. Verificar el entorno completo</h3>
+  <p>Examine todas las variables de entorno relacionadas con ROS 2.</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>printenv | grep ROS</code></pre>
+  </div>
+
+  <p><strong>Salida esperada (extracto):</strong></p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
+    </div>
+    <pre><code>ROS_VERSION=2
+ROS_DISTRO=jazzy
+ROS_PYTHON_VERSION=3
+AMENT_PREFIX_PATH=/opt/ros/jazzy
+LD_LIBRARY_PATH=/opt/ros/jazzy/lib:...
+PATH=/opt/ros/jazzy/bin:...
+PYTHONPATH=/opt/ros/jazzy/lib/python3.12/site-packages:...</code></pre>
+  </div>
+
+  <p>Variables clave y su significado:</p>
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead><tr><th>Variable</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td><code>ROS_VERSION</code></td><td>Versión mayor de ROS. En ROS 2 siempre es <code>2</code>.</td></tr>
+        <tr><td><code>ROS_DISTRO</code></td><td>Codename de la distribución activa. Debe ser <code>jazzy</code>.</td></tr>
+        <tr><td><code>ROS_PYTHON_VERSION</code></td><td>Versión mayor de Python. En Jazzy es <code>3</code>.</td></tr>
+        <tr><td><code>AMENT_PREFIX_PATH</code></td><td>Ruta base donde <code>ament</code> busca los paquetes instalados.</td></tr>
+        <tr><td><code>LD_LIBRARY_PATH</code></td><td>Rutas de bibliotecas compartidas. Debe incluir <code>/opt/ros/jazzy/lib</code>.</td></tr>
+        <tr><td><code>PYTHONPATH</code></td><td>Rutas de módulos Python. Debe incluir <code>/opt/ros/jazzy/lib/python3.12/site-packages</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Tabla de validación</h3>
+  <p>Use esta tabla como checklist para confirmar que todos los componentes están operativos.</p>
+
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead><tr><th>Comando</th><th>Qué verifica</th><th>Salida esperada</th><th>Acción si falla</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>echo $ROS_DISTRO</code></td>
+          <td>Distribución activa</td>
+          <td><code>jazzy</code></td>
+          <td>Ejecutar <code>source /opt/ros/jazzy/setup.bash</code> y revisar <code>~/.bashrc</code>.</td>
+        </tr>
+        <tr>
+          <td><code>which ros2</code></td>
+          <td>Ruta del ejecutable</td>
+          <td><code>/opt/ros/jazzy/bin/ros2</code></td>
+          <td>Recargar el entorno con <code>source /opt/ros/jazzy/setup.bash</code>.</td>
+        </tr>
+        <tr>
+          <td><code>ros2</code></td>
+          <td>CLI y subcomandos</td>
+          <td>Lista de subcomandos (<code>topic</code>, <code>node</code>, <code>service</code>, etc.)</td>
+          <td>Reinstalar <code>ros-jazzy-desktop</code>.</td>
+        </tr>
+        <tr>
+          <td><code>ros2 doctor</code></td>
+          <td>Estado del entorno</td>
+          <td><code>All N checks passed</code></td>
+          <td>Revisar advertencias y la sección de errores comunes.</td>
+        </tr>
+        <tr>
+          <td><code>ros2 pkg list | head</code></td>
+          <td>Paquetes instalados</td>
+          <td><code>action_msgs</code>, <code>std_msgs</code>, <code>rclpy</code>, <code>rclcpp</code></td>
+          <td>Reinstalar <code>ros-jazzy-desktop</code>.</td>
+        </tr>
+        <tr>
+          <td><code>ros2 pkg list | grep demo</code></td>
+          <td>Nodos de demostración</td>
+          <td><code>demo_nodes_cpp</code> y <code>demo_nodes_py</code></td>
+          <td>Verificar la instalación de <code>ros-jazzy-desktop</code>.</td>
+        </tr>
+        <tr>
+          <td><code>printenv | grep ROS</code></td>
+          <td>Variables de entorno</td>
+          <td><code>ROS_DISTRO=jazzy</code>, <code>ROS_VERSION=2</code></td>
+          <td>Recargar el entorno.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Errores comunes</h3>
+  <p>Si alguna de las verificaciones anteriores falla, consulte la siguiente tabla para identificar la causa y la solución.</p>
+
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead>
+        <tr><th style="min-width:220px">Error</th><th>Causa</th><th>Diagnóstico</th><th>Solución</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>ros2: command not found</code></td>
+          <td>El entorno no está cargado o la instalación no existe.</td>
+          <td>Ejecute <code>which ros2</code>. Si no devuelve nada, ROS 2 no está en el <code>PATH</code>.</td>
+          <td>Ejecute <code>source /opt/ros/jazzy/setup.bash</code> o reinstale <code>ros-jazzy-desktop</code>.</td>
+        </tr>
+        <tr>
+          <td><code>ros2: error: unrecognized arguments: --version</code></td>
+          <td>El argumento <code>--version</code> no existe en la CLI de ROS 2.</td>
+          <td>No es un error de instalación. La CLI no implementa <code>--version</code>.</td>
+          <td>Use <code>echo $ROS_DISTRO</code>, <code>which ros2</code> y <code>ros2 doctor</code> en su lugar.</td>
+        </tr>
+        <tr>
+          <td><code>ROS_DISTRO</code> vacío</td>
+          <td>El archivo <code>setup.bash</code> no se ha cargado en la sesión actual.</td>
+          <td>Abra una nueva terminal. Si persiste, revise <code>~/.bashrc</code>.</td>
+          <td>Agregue <code>source /opt/ros/jazzy/setup.bash</code> al <code>~/.bashrc</code> y ejecute <code>source ~/.bashrc</code>.</td>
+        </tr>
+        <tr>
+          <td><code>which ros2</code> no devuelve ninguna ruta</td>
+          <td>El directorio <code>/opt/ros/jazzy/bin</code> no está en el <code>PATH</code>.</td>
+          <td>Ejecute <code>echo $PATH | grep '/opt/ros/jazzy/bin'</code>.</td>
+          <td>Recargue el entorno con <code>source /opt/ros/jazzy/setup.bash</code>.</td>
+        </tr>
+        <tr>
+          <td><code>ros2 doctor</code> reporta errores</td>
+          <td>Problemas con la plataforma, red, DDS o el daemon.</td>
+          <td>Lea el detalle del error y la categoría (PLATFORM, NETWORK, RMW, etc.).</td>
+          <td>Reinicie el daemon con <code>ros2 daemon stop && ros2 daemon start</code>. Si el error es de red, revise WSL y la conectividad.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-warning">
+    <div class="callout-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Nota técnica sobre esta corrección</strong>
+      <p>Durante la validación final del libro en Ubuntu 24.04 LTS + ROS 2 Jazzy se descubrió que el comando <code>ros2 --version</code> no forma parte de la interfaz oficial de ROS 2 y devuelve <code>ros2: error: unrecognized arguments: --version</code>. Esta sección fue reemplazada por un conjunto de verificaciones más completas y confiables que cubren la distribución activa, el ejecutable, la CLI, el estado del entorno, los paquetes instalados y las variables de entorno.</p>
+    </div>
   </div>
 </section>
 
