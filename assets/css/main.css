@@ -312,16 +312,19 @@ h5 { font-size: 1rem; font-weight: 600; }
 
 /* ---------- Footer ---------- */
 .book-footer {
-  background: #111827; /* Gris muy oscuro fijo */
-  color: #9ca3af; /* Gris claro */
+  background: #111827 !important; /* Gris muy oscuro fijo */
+  color: #e5e7eb !important; /* Gris muy claro fijo */
   padding: 2rem 0;
   font-size: 0.85rem;
   text-align: center;
 }
 
 .book-footer p,
+.book-footer div,
+.book-footer span,
 .book-footer .text-muted {
-  color: #9ca3af !important;
+  color: #e5e7eb !important;
+  --bs-secondary-color: #e5e7eb !important;
 }
 
 .book-footer a {
