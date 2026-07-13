@@ -125,13 +125,8 @@ window.SearchIndexData = [
     "category": "Instalación"
   },
   {
-    "title": "Instalar Gazebo Harmonic",
+    "title": "Instalación reproducible de Gazebo Harmonic",
     "url": "chapters/capitulo-02.html#paso22",
-    "category": "Instalación"
-  },
-  {
-    "title": "Ejecutar Gazebo Harmonic",
-    "url": "chapters/capitulo-02.html#paso23",
     "category": "Instalación"
   },
   {
