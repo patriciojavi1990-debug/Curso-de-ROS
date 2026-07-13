@@ -125,7 +125,7 @@ window.SearchIndexData = [
     "category": "Instalación"
   },
   {
-    "title": "Instalación reproducible de Gazebo Harmonic",
+    "title": "Instalación de Gazebo Harmonic",
     "url": "chapters/capitulo-02.html#paso22",
     "category": "Instalación"
   },

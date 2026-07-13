@@ -1698,73 +1698,38 @@ source ~/.bashrc</code></pre>
      ================================================================ -->
 <section id="paso22" class="step-section">
   <div class="step-badge"><i class="bi bi-2-circle-fill"></i> Paso 22</div>
-  <h2>Instalación reproducible de Gazebo Harmonic</h2>
+  <h2>Instalación de Gazebo Harmonic</h2>
 
   <h3><i class="bi bi-book me-2"></i>Introducción</h3>
-
-  <h4>¿Qué es Gazebo Harmonic?</h4>
   <p>
-    <strong>Gazebo Harmonic</strong> (también conocido como <em>Gazebo Sim</em>) es un simulador 3D de robótica de código abierto, mantenido por Open Robotics. Permite simular robots, sensores y entornos físicos con un motor de física realista (ODE, Bullet, DART). Es el simulador oficialmente recomendado para ROS 2 Jazzy.
+    <strong>Gazebo Harmonic</strong> (también conocido como <em>Gazebo Sim</em>) es el simulador 3D de robótica de código abierto mantenido por Open Robotics, recomendado oficialmente para ROS 2 Jazzy. Permite simular robots, sensores y entornos físicos con un motor de física realista.
   </p>
-
-  <h4>¿Qué es <code>ros_gz</code>?</h4>
   <p>
-    <code>ros_gz</code> es el <strong>metapaquete de integración</strong> entre ROS 2 y Gazebo Harmonic. Agrupa todas las herramientas, bibliotecas y nodos necesarios para que los tópicos, servicios y mensajes de ROS 2 interoperen con el mundo simulado de Gazebo. Equivale al antiguo <code>gazebo_ros_pkgs</code> de ROS 1, pero rediseñado para la nueva arquitectura de Gazebo basada en el framework <em>Ignition</em>.
+    Existen <strong>dos formas de instalar Gazebo Harmonic</strong> en un sistema con ROS 2 Jazzy:
   </p>
-
-  <h4>¿Qué es <code>ros_gz_bridge</code>?</h4>
-  <p>
-    <code>ros_gz_bridge</code> es un <strong>puente bidireccional</strong> entre los tópicos de ROS 2 y los tópicos de Gazebo Transport. Permite que los datos generados por un sensor simulado en Gazebo (por ejemplo, un LIDAR) lleguen a un nodo de ROS 2, y que los comandos de velocidad de un nodo de ROS 2 se apliquen al robot en simulación. El bridge se configura con archivos YAML.
-  </p>
-
-  <h4>¿Qué es <code>ros_gz_sim</code>?</h4>
-  <p>
-    <code>ros_gz_sim</code> contiene los <strong>archivos de launch</strong> y nodos de ROS 2 para iniciar el simulador Gazebo Harmonic desde el ecosistema ROS 2. Provee el comando <code>ros2 launch ros_gz_sim gz_sim.launch.py</code> que abre Gazebo con un mundo vacío, listo para cargar robots y sensores.
-  </p>
-
-  <h4>Diferencias entre Gazebo Classic y Gazebo Harmonic</h4>
   <div class="table-wrapper">
     <table class="book-table">
-      <thead><tr><th>Característica</th><th>Gazebo Classic (11)</th><th>Gazebo Harmonic</th></tr></thead>
+      <thead><tr><th>Método</th><th>Origen</th><th>Compatibilidad con ROS 2 Jazzy</th></tr></thead>
       <tbody>
-        <tr><td>Estado</td><td>Mantenimiento hasta 2025 (EOL)</td><td>Versión actual soportada</td></tr>
-        <tr><td>Compatibilidad con ROS 2 Jazzy</td><td>❌ No soportado oficialmente</td><td>✅ Recomendado por Open Robotics</td></tr>
-        <tr><td>Arquitectura</td><td>Monolítica (C++ legacy)</td><td>Modular (Ignition/Drake)</td></tr>
-        <tr><td>Motor de física</td><td>ODE, Bullet, DART</td><td>ODE, Bullet, DART, TPE</td></tr>
-        <tr><td>Integración con ROS 2</td><td><code>gazebo_ros_pkgs</code></td><td><code>ros_gz</code></td></tr>
-        <tr><td>Comando de ejecución</td><td><code>gazebo</code></td><td><code>gz sim</code> o <code>ros2 launch ros_gz_sim ...</code></td></tr>
+        <tr>
+          <td><strong>Paquetes Vendor de ROS</strong></td>
+          <td>Repositorio oficial de ROS 2 (<code>packages.ros.org</code>)</td>
+          <td>✅ <strong>Total</strong>. Versiones alineadas con la distribución ROS 2.</td>
+        </tr>
+        <tr>
+          <td><strong>Repositorio oficial de Gazebo</strong></td>
+          <td><code>packages.osrfoundation.org</code></td>
+          <td>⚠️ <strong>Parcial</strong>. Requiere coordinación manual de versiones.</td>
+        </tr>
       </tbody>
     </table>
   </div>
+  <p>
+    Este libro utiliza la <strong>instalación mediante paquetes Vendor de ROS</strong> porque mantiene compatibilidad total con ROS 2 Jazzy, evita conflictos de versiones y es el método oficialmente soportado por Open Robotics para esta distribución.
+  </p>
 
-  <h3><i class="bi bi-1-circle-fill me-2"></i>Paso 1 — Verificar que ROS 2 Jazzy está activo</h3>
-  <p>Antes de instalar Gazebo, confirme que el entorno ROS 2 Jazzy está correctamente cargado.</p>
-
-  <div class="code-block-wrapper">
-    <div class="code-block-header">
-      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
-      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
-    </div>
-    <pre><code>echo $ROS_DISTRO
-which ros2
-ros2 doctor --report | head -20</code></pre>
-  </div>
-
-  <p><strong>Salida esperada (fragmento):</strong></p>
-  <div class="code-block-wrapper">
-    <div class="code-block-header">
-      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
-    </div>
-    <pre><code>jazzy
-/opt/ros/jazzy/bin/ros2
-  PLATFORM
-  ok    Platform.UNIX.LINUX.OK</code></pre>
-  </div>
-
-  <p>Si <code>echo $ROS_DISTRO</code> devuelve vacío, ejecute <code>source /opt/ros/jazzy/setup.bash</code> y verifique que la línea esté en su <code>~/.bashrc</code>.</p>
-
-  <h3><i class="bi bi-2-circle-fill me-2"></i>Paso 2 — Actualizar Ubuntu</h3>
-  <p>Asegúrese de que el índice de paquetes y los paquetes del sistema estén al día antes de instalar Gazebo.</p>
+  <h3><i class="bi bi-1-circle-fill me-2"></i>Paso 1 — Instalar los paquetes</h3>
+  <p>Ejecute los siguientes comandos para instalar la integración completa entre ROS 2 Jazzy y Gazebo Harmonic.</p>
 
   <div class="code-block-wrapper">
     <div class="code-block-header">
@@ -1772,58 +1737,13 @@ ros2 doctor --report | head -20</code></pre>
       <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
     </div>
     <pre><code>sudo apt update
-sudo apt upgrade -y</code></pre>
-  </div>
 
-  <h3><i class="bi bi-3-circle-fill me-2"></i>Paso 3 — Verificar el repositorio de ROS 2 Jazzy</h3>
-  <p>Confirme que el repositorio de ROS 2 Jazzy está registrado y disponible para resolver dependencias.</p>
-
-  <div class="code-block-wrapper">
-    <div class="code-block-header">
-      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
-      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
-    </div>
-    <pre><code>apt policy ros-jazzy-desktop</code></pre>
-  </div>
-
-  <p><strong>Salida esperada (fragmento):</strong></p>
-  <div class="code-block-wrapper">
-    <div class="code-block-header">
-      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
-    </div>
-    <pre><code>ros-jazzy-desktop:
-  Installed: 0.11.0-1noble.20250508.181555
-  Candidate: 0.11.0-1noble.20250508.181555
-  Version table:
- *** 0.11.0-1noble.20250508.181555 500
-        500 http://packages.ros.org/ros2/ubuntu noble/main amd64 Packages
-        100 /var/lib/dpkg/status</code></pre>
-  </div>
-
-  <p>La línea clave es <code>http://packages.ros.org/ros2/ubuntu noble/main amd64 Packages</code>. Si no aparece, revise el <a href="#paso11">Paso 11</a> del capítulo.</p>
-
-  <h3><i class="bi bi-4-circle-fill me-2"></i>Paso 4 — Instalar Gazebo Harmonic</h3>
-  <p>Instale los cinco paquetes que componen la integración ROS 2 + Gazebo Harmonic.</p>
-
-  <div class="code-block-wrapper">
-    <div class="code-block-header">
-      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
-      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
-    </div>
-    <pre><code>sudo apt install -y \
+sudo apt install -y \
   ros-jazzy-ros-gz \
   ros-jazzy-ros-gz-sim \
   ros-jazzy-ros-gz-bridge \
   ros-jazzy-ros-gz-image \
   ros-jazzy-gz-tools-vendor</code></pre>
-  </div>
-
-  <div class="callout callout-info">
-    <div class="callout-icon"><i class="bi bi-info-circle-fill"></i></div>
-    <div class="callout-body">
-      <strong>Tiempo de instalación</strong>
-      <p>La descarga aproximada es de <strong>400 MB</strong>. En una conexión de 100 Mbps tarda entre 3 y 8 minutos.</p>
-    </div>
   </div>
 
   <h4>Descripción de cada paquete</h4>
@@ -1855,16 +1775,24 @@ sudo apt upgrade -y</code></pre>
     </table>
   </div>
 
-  <h3><i class="bi bi-5-circle-fill me-2"></i>Paso 5 — Verificar la instalación a nivel de paquetes Debian</h3>
-  <p>Confirme que los paquetes <code>.deb</code> se instalaron correctamente.</p>
+  <div class="callout callout-info">
+    <div class="callout-icon"><i class="bi bi-info-circle-fill"></i></div>
+    <div class="callout-body">
+      <strong>Tiempo de instalación</strong>
+      <p>La descarga aproximada es de <strong>400 MB</strong>. En una conexión de 100 Mbps tarda entre 3 y 8 minutos.</p>
+    </div>
+  </div>
 
+  <h3><i class="bi bi-2-circle-fill me-2"></i>Paso 2 — Verificar que los paquetes quedaron instalados</h3>
+  <p>No asuma que la instalación fue exitosa. Verifique explícitamente a nivel del sistema de paquetes y a nivel de ROS 2.</p>
+
+  <h4>Verificación a nivel de paquetes Debian</h4>
   <div class="code-block-wrapper">
     <div class="code-block-header">
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
       <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
     </div>
-    <pre><code>dpkg -l | grep ros-jazzy-ros-gz
-dpkg -l | grep ros-jazzy-gz-tools-vendor</code></pre>
+    <pre><code>dpkg -l | grep ros-jazzy-ros-gz</code></pre>
   </div>
 
   <p><strong>Salida esperada (fragmento):</strong></p>
@@ -1872,18 +1800,14 @@ dpkg -l | grep ros-jazzy-gz-tools-vendor</code></pre>
     <div class="code-block-header">
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
     </div>
-    <pre><code>ii  ros-jazzy-gz-tools-vendor   0.1.0-3noble.20241017.225205  amd64  Vendor package for gz tools
-ii  ros-jazzy-ros-gz            0.244.14-1noble.20251004.181... amd64  ROS 2 integration for Gazebo
-ii  ros-jazzy-ros-gz-bridge     1.0.15-1noble.20251004.181...  amd64  Bridge between ROS 2 and Gazebo Transport
-ii  ros-jazzy-ros-gz-image      1.0.15-1noble.20251004.181...  amd64  Image transport between ROS 2 and Gazebo
-ii  ros-jazzy-ros-gz-sim        1.0.15-1noble.20251004.181...  amd64  Launch files for Gazebo Sim from ROS 2</code></pre>
+    <pre><code>ii  ros-jazzy-gz-tools-vendor   0.1.0-3noble.20241017  amd64
+ii  ros-jazzy-ros-gz            0.244.14-1noble.2025... amd64
+ii  ros-jazzy-ros-gz-bridge     1.0.15-1noble.2025...  amd64
+ii  ros-jazzy-ros-gz-image      1.0.15-1noble.2025...  amd64
+ii  ros-jazzy-ros-gz-sim        1.0.15-1noble.2025...  amd64</code></pre>
   </div>
 
-  <p>El indicador <code>ii</code> al inicio de cada línea confirma que el paquete está <strong>instalado correctamente</strong>. La primera letra indica el estado deseado y la segunda el estado actual (<code>ii</code> = installed installed).</p>
-
-  <h3><i class="bi bi-6-circle-fill me-2"></i>Paso 6 — Verificar los paquetes ROS 2</h3>
-  <p>Liste los paquetes ROS 2 del ecosistema Gazebo reconocidos por <code>ros2 pkg</code>.</p>
-
+  <h4>Verificación a nivel de ROS 2</h4>
   <div class="code-block-wrapper">
     <div class="code-block-header">
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
@@ -1904,79 +1828,47 @@ ros_gz_interfaces
 ros_gz_sim</code></pre>
   </div>
 
-  <p>Si <code>ros2 pkg list</code> no devuelve ningún paquete <code>ros_gz</code>, significa que el entorno ROS 2 no está cargado o los paquetes no se instalaron. Revise el <a href="#paso14">Paso 14</a> y el Paso 5 de esta sección.</p>
+  <p>Si ambos comandos devuelven los paquetes esperados, <strong>ROS 2 reconoce correctamente la integración con Gazebo</strong>. Si alguno no aparece, revise la sección de <a href="#problemas">Problemas encontrados</a>.</p>
 
-  <h3><i class="bi bi-7-circle-fill me-2"></i>Paso 7 — Buscar el ejecutable <code>gz</code></h3>
-  <p>El comando <code>gz</code> es la CLI de Gazebo Harmonic. Verifique su ubicación en el sistema.</p>
+  <h3><i class="bi bi-3-circle-fill me-2"></i>Paso 3 — Comprobar si el ejecutable <code>gz</code> existe</h3>
+  <p>El ejecutable <code>gz</code> es la CLI de Gazebo Harmonic. Verifique si está disponible en el <code>PATH</code> del sistema.</p>
 
   <div class="code-block-wrapper">
     <div class="code-block-header">
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
       <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
     </div>
-    <pre><code>which gz
-find /usr /opt -name "gz" -type f 2>/dev/null | head -10</code></pre>
+    <pre><code>which gz</code></pre>
   </div>
 
-  <p><strong>Salida esperada (con el vendor instalado):</strong></p>
+  <p>Pueden ocurrir dos casos:</p>
+
+  <h4>Caso A — El binario está en el PATH</h4>
+  <p>Si <code>which gz</code> devuelve una ruta, por ejemplo:</p>
   <div class="code-block-wrapper">
     <div class="code-block-header">
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
     </div>
-    <pre><code>/usr/bin/gz
-/usr/bin/gz
-/opt/ros/jazzy/opt/gz-tools-vendor/bin/gz</code></pre>
+    <pre><code>/usr/bin/gz</code></pre>
   </div>
+  <p>No es necesario realizar ninguna acción adicional. Continúe con el <a href="#paso5">Paso 5</a>.</p>
 
-  <p>Si <code>which gz</code> no devuelve nada, el vendor no expuso el binario en el <code>PATH</code>. Esto puede deberse a que el archivo <code>setup.bash</code> del vendor no se cargó o a que el paquete no se instaló.</p>
-
-  <div class="callout callout-danger">
-    <div class="callout-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
+  <h4>Caso B — El binario no está en el PATH</h4>
+  <div class="callout callout-warning">
+    <div class="callout-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
     <div class="callout-body">
-      <strong>Si <code>which gz</code> está vacío</strong>
-      <p>El paquete <code>ros-jazzy-gz-tools-vendor</code> instala el binario <code>gz</code> en una ruta que solo se expone al <code>PATH</code> cuando se carga el archivo <code>setup.bash</code> de ROS 2. Si el comando <code>which gz</code> no devuelve nada, ejecute:</p>
-      <pre class="mb-2 mt-2" style="background:#2D2D2D;color:#F8D7DA;padding:0.75rem;border-radius:6px;font-size:0.85rem;"><code>$ which gz
-$ ls /opt/ros/jazzy/opt/gz-tools-vendor/bin/</code></pre>
-      <p>Si la segunda ruta existe, el binario está instalado pero no se está cargando. Recargue el entorno con <code>source /opt/ros/jazzy/setup.bash</code>.</p>
+      <strong>Problema detectado durante las pruebas reales del libro</strong>
+      <p>En la instalación validada, <code>which gz</code> <strong>no devolvió ninguna ruta</strong>. Esto ocurre porque la instalación Vendor no exporta automáticamente la carpeta <code>gz_tools_vendor/bin</code> al <code>PATH</code> del usuario.</p>
     </div>
   </div>
 
-  <h3><i class="bi bi-8-circle-fill me-2"></i>Paso 8 — Verificar la instalación del vendor y dependencias nativas</h3>
-  <p>El paquete vendor instala Gazebo Harmonic y todas sus dependencias nativas (binarios, bibliotecas, modelos).</p>
-
+  <p>Para confirmar que el binario sí existe (solo que no está en el <code>PATH</code>), ejecute:</p>
   <div class="code-block-wrapper">
     <div class="code-block-header">
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
       <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
     </div>
-    <pre><code>dpkg -l | grep gz
-dpkg -l | grep ignition</code></pre>
-  </div>
-
-  <p><strong>Salida esperada (fragmento):</strong></p>
-  <div class="code-block-wrapper">
-    <div class="code-block-header">
-      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
-    </div>
-    <pre><code>ii  gz-harmonic        1.0.0-1noble  amd64  ...
-ii  gz-tools2          2.0.2-1noble  amd64  ...
-ii  libgz-cmake3-dev   3.5.4-1noble  amd64  ...
-...
-ii  libignition-cmake2-dev  2.17.1-1noble  amd64  ...</code></pre>
-  </div>
-
-  <p>Los paquetes <code>gz-harmonic</code> y <code>gz-tools2</code> confirman que el simulador y sus herramientas están instalados. La presencia de paquetes con prefijo <code>libignition-</code> indica que se instalaron también las bibliotecas nativas de Ignition (la base de Gazebo Harmonic).</p>
-
-  <h3><i class="bi bi-9-circle-fill me-2"></i>Paso 9 — Verificar los launch files disponibles</h3>
-  <p>Confirme que el paquete <code>ros_gz_sim</code> expone los archivos de launch necesarios.</p>
-
-  <div class="code-block-wrapper">
-    <div class="code-block-header">
-      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
-      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
-    </div>
-    <pre><code>ros2 pkg prefix ros_gz_sim
-ros2 pkg executables ros_gz_sim</code></pre>
+    <pre><code>find /opt/ros/jazzy -name gz</code></pre>
   </div>
 
   <p><strong>Salida esperada:</strong></p>
@@ -1984,16 +1876,166 @@ ros2 pkg executables ros_gz_sim</code></pre>
     <div class="code-block-header">
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
     </div>
-    <pre><code>/opt/ros/jazzy
-ros_gz_sim gz_sim.launch.py:ros_gz_sim.launch_gz_sim</code></pre>
+    <pre><code>/opt/ros/jazzy/opt/gz_tools_vendor/bin/gz</code></pre>
   </div>
 
-  <p>La primera línea muestra la ruta de instalación del paquete (<code>/opt/ros/jazzy</code>). La segunda lista el archivo de launch <code>gz_sim.launch.py</code> que invocaremos en el siguiente paso.</p>
+  <p>El ejecutable <strong>sí existe</strong>, pero el archivo <code>setup.bash</code> de ROS 2 no agregó esa carpeta al <code>PATH</code> de la sesión. Es un comportamiento conocido de la instalación Vendor. Se resuelve manualmente en el siguiente paso.</p>
 
-  <h3><i class="bi bi-play-circle-fill me-2"></i>Paso 10 — Ejecutar Gazebo Harmonic</h3>
-  <p>Siga el orden de comandos recomendado. Si el primero falla, el segundo es la alternativa validada.</p>
+  <h3><i class="bi bi-4-circle-fill me-2"></i>Paso 4 — Agregar Gazebo al PATH</h3>
+  <p>Edite el archivo <code>~/.bashrc</code> para que el binario <code>gz</code> esté disponible en todas las terminales.</p>
 
-  <h4>10.1 Intento directo con la CLI <code>gz</code></h4>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>echo 'export PATH=$PATH:/opt/ros/jazzy/opt/gz_tools_vendor/bin' >> ~/.bashrc
+source ~/.bashrc</code></pre>
+  </div>
+
+  <p>Verificar nuevamente:</p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>which gz</code></pre>
+  </div>
+
+  <p><strong>Salida esperada:</strong></p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
+    </div>
+    <pre><code>/opt/ros/jazzy/opt/gz_tools_vendor/bin/gz</code></pre>
+  </div>
+
+  <h3><i class="bi bi-5-circle-fill me-2"></i>Paso 5 — Comprobar las variables de entorno de Gazebo</h3>
+  <p>Gazebo Harmonic utiliza tres variables de entorno clave para localizar sus archivos de configuración, plugins y recursos.</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>echo $GZ_CONFIG_PATH
+echo $GZ_PLUGIN_PATH
+echo $GZ_SIM_RESOURCE_PATH</code></pre>
+  </div>
+
+  <p>Durante las pruebas reales del libro, las tres variables aparecieron <strong>vacías</strong>. Esto es normal con la instalación Vendor: el archivo <code>setup.bash</code> de ROS 2 no las exporta automáticamente. Es necesario configurarlas manualmente en el <a href="#paso8">Paso 8</a>.</p>
+
+  <h3><i class="bi bi-6-circle-fill me-2"></i>Paso 6 — Comprobar la instalación Vendor</h3>
+  <p>Verifique que las carpetas de Gazebo Vendor están presentes en el sistema.</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>ls /opt/ros/jazzy/opt</code></pre>
+  </div>
+
+  <p><strong>Salida esperada:</strong></p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
+    </div>
+    <pre><code>gz_common_vendor
+gz_gui_vendor
+gz_sim_vendor
+gz_tools_vendor
+gz_transport_vendor</code></pre>
+  </div>
+
+  <p>La presencia de estas cinco carpetas confirma que Gazebo Harmonic fue instalado correctamente mediante Vendor. Cada carpeta contiene los binarios, bibliotecas y archivos de configuración de su componente respectivo.</p>
+
+  <h3><i class="bi bi-bug me-2"></i>Paso 7 — Problema encontrado: <code>gz sim</code> no encuentra el comando</h3>
+  <p>Al ejecutar <code>gz sim</code> con el binario recién agregado al <code>PATH</code> pero sin las variables de entorno, se obtuvo:</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida de error</span>
+    </div>
+    <pre><code>$ gz sim
+I cannot find any available 'gz' command</code></pre>
+  </div>
+
+  <h4>Explicación técnica</h4>
+  <p>El ejecutable <code>gz</code> que provee <code>gz_tools_vendor</code> es un <strong>wrapper</strong> (delegado) que delega a otros sub-comandos de Gazebo Harmonic (<code>gz sim</code>, <code>gz topic</code>, <code>gz service</code>, etc.). Para localizar esos sub-comandos, el wrapper lee la variable de entorno <code>GZ_CONFIG_PATH</code>, que apunta a una carpeta con archivos de configuración <code>.yaml</code> que registran los ejecutables disponibles.</p>
+  <p>Con la instalación Vendor, <code>GZ_CONFIG_PATH</code> <strong>no se exporta automáticamente</strong> al cargar <code>setup.bash</code>. Aunque el binario existe y es ejecutable, no puede encontrar sus sub-comandos. La solución es configurar las variables manualmente, como se muestra en el siguiente paso.</p>
+
+  <h3><i class="bi bi-7-circle-fill me-2"></i>Paso 8 — Configurar el Gazebo Vendor</h3>
+  <p>Agregue las siguientes líneas al final del archivo <code>~/.bashrc</code> para que las variables de entorno de Gazebo se configuren automáticamente en cada nueva terminal.</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>cat >> ~/.bashrc &lt;&lt; 'EOF'
+
+# Gazebo Harmonic Vendor (ROS 2 Jazzy)
+export PATH=$PATH:/opt/ros/jazzy/opt/gz_tools_vendor/bin
+export GZ_CONFIG_PATH=/opt/ros/jazzy/opt/gz_sim_vendor/share/gz
+export GZ_PLUGIN_PATH=/opt/ros/jazzy/opt/gz_sim_vendor/lib
+export GZ_SIM_RESOURCE_PATH=/opt/ros/jazzy/opt/gz_sim_vendor/share/gz
+EOF
+
+source ~/.bashrc</code></pre>
+  </div>
+
+  <h4>Descripción de cada variable</h4>
+  <div class="table-wrapper">
+    <table class="book-table">
+      <thead><tr><th>Variable</th><th>Función</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>PATH</code></td>
+          <td>Agrega la carpeta <code>bin</code> del vendor para que el ejecutable <code>gz</code> sea invocable desde cualquier ruta.</td>
+        </tr>
+        <tr>
+          <td><code>GZ_CONFIG_PATH</code></td>
+          <td>Apunta a los archivos de configuración YAML que registran los sub-comandos (<code>gz sim</code>, <code>gz topic</code>, etc.) y sus plugins.</td>
+        </tr>
+        <tr>
+          <td><code>GZ_PLUGIN_PATH</code></td>
+          <td>Apunta a las bibliotecas compartidas (.so) de los plugins del simulador (sensores, sistemas, interfaces).</td>
+        </tr>
+        <tr>
+          <td><code>GZ_SIM_RESOURCE_PATH</code></td>
+          <td>Apunta a los recursos del simulador: mundos SDF, meshes, materiales y modelos 3D.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><i class="bi bi-8-circle-fill me-2"></i>Paso 9 — Verificar las variables de entorno</h3>
+  <p>Tras recargar <code>~/.bashrc</code>, las tres variables de Gazebo deben contener rutas válidas.</p>
+
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>echo $GZ_CONFIG_PATH
+echo $GZ_PLUGIN_PATH
+echo $GZ_SIM_RESOURCE_PATH</code></pre>
+  </div>
+
+  <p><strong>Salida esperada:</strong></p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
+    </div>
+    <pre><code>/opt/ros/jazzy/opt/gz_sim_vendor/share/gz
+/opt/ros/jazzy/opt/gz_sim_vendor/lib
+/opt/ros/jazzy/opt/gz_sim_vendor/share/gz</code></pre>
+  </div>
+
+  <h3><i class="bi bi-play-circle-fill me-2"></i>Paso 10 — Probar Gazebo</h3>
+  <p>Con las variables configuradas, el comando <code>gz sim</code> debería abrir la ventana del simulador.</p>
+
   <div class="code-block-wrapper">
     <div class="code-block-header">
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
@@ -2002,71 +2044,7 @@ ros_gz_sim gz_sim.launch.py:ros_gz_sim.launch_gz_sim</code></pre>
     <pre><code>gz sim</code></pre>
   </div>
 
-  <p>Si el vendor está correctamente instalado, se abre la ventana de Gazebo Harmonic con un mundo vacío.</p>
-
-  <div class="callout callout-danger">
-    <div class="callout-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
-    <div class="callout-body">
-      <strong>Si obtiene <code>gz: command not found</code></strong>
-      <p>Esto significa que el binario <code>gz</code> no se encuentra en el <code>PATH</code>. Las causas más comunes son:</p>
-      <ul>
-        <li>El entorno ROS 2 no está cargado: ejecute <code>source /opt/ros/jazzy/setup.bash</code>.</li>
-        <li>El paquete <code>ros-jazzy-gz-tools-vendor</code> no se instaló: revise el Paso 5.</li>
-        <li>El archivo <code>setup.bash</code> del vendor no expone el binario: revise el <a href="#paso7">Paso 7</a> y cargue el entorno completo.</li>
-      </ul>
-      <p>La alternativa validada en este libro es usar el launch de ROS 2 (siguiente paso).</p>
-    </div>
-  </div>
-
-  <h4>10.2 Lanzamiento desde ROS 2 (alternativa validada)</h4>
-  <p>Esta es la forma recomendada de ejecutar Gazebo en el ecosistema ROS 2.</p>
-
-  <div class="code-block-wrapper">
-    <div class="code-block-header">
-      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
-      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
-    </div>
-    <pre><code>ros2 launch ros_gz_sim gz_sim.launch.py</code></pre>
-  </div>
-
-  <p><strong>Salida esperada (fragmento):</strong></p>
-  <div class="code-block-wrapper">
-    <div class="code-block-header">
-      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
-    </div>
-    <pre><code>[INFO] [launch]: All log files can be found below /home/usuario/.ros/log/...
-[INFO] [launch]: Default logging verbosity is set to INFO
-[INFO] [gz_sim-1]: process started with pid [12345]</code></pre>
-  </div>
-
-  <p>Se abrirá la ventana 3D de Gazebo Harmonic con un mundo vacío. Cierre con <kbd>Ctrl</kbd>+<kbd>C</kbd> en la terminal.</p>
-
-  <h4>10.3 Lanzar un mundo de ejemplo</h4>
-  <p>Para abrir un mundo con formas geométricas y física activa:</p>
-
-  <div class="code-block-wrapper">
-    <div class="code-block-header">
-      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
-      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
-    </div>
-    <pre><code>ros2 launch ros_gz_sim gz_sim.launch.py gz_args:="shapes.sdf"</code></pre>
-  </div>
-
-  <h4>10.4 Si <code>ros2 launch</code> falla con <code>Package 'ros_gz_sim' not found</code></h4>
-  <div class="callout callout-danger">
-    <div class="callout-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
-    <div class="callout-body">
-      <strong>Diagnóstico</strong>
-      <p>El sistema de ROS 2 no encuentra el paquete <code>ros_gz_sim</code>. Pasos para diagnosticar:</p>
-      <ol>
-        <li>Verifique que el paquete está instalado (Paso 5): <code>dpkg -l | grep ros-jazzy-ros-gz-sim</code>.</li>
-        <li>Verifique que ROS 2 reconoce el paquete (Paso 6): <code>ros2 pkg list | grep ros_gz</code>.</li>
-        <li>Verifique que el entorno está cargado: <code>echo $AMENT_PREFIX_PATH</code> debe incluir <code>/opt/ros/jazzy</code>.</li>
-        <li>Recargue el entorno: <code>source /opt/ros/jazzy/setup.bash</code>.</li>
-        <li>Reinstale si todo lo anterior falla: <code>sudo apt install --reinstall ros-jazzy-ros-gz-sim</code>.</li>
-      </ol>
-    </div>
-  </div>
+  <p>Si Gazebo se abre correctamente, la instalación está completa. Cierre con <kbd>Ctrl</kbd>+<kbd>C</kbd>.</p>
 
   <div class="callout callout-tip">
     <div class="callout-icon"><i class="bi bi-lightbulb-fill"></i></div>
@@ -2076,198 +2054,73 @@ ros_gz_sim gz_sim.launch.py:ros_gz_sim.launch_gz_sim</code></pre>
     </div>
   </div>
 
-  <h3><i class="bi bi-clipboard-check me-2"></i>Paso 11 — Tabla de validación</h3>
-  <p>Use esta tabla como checklist para confirmar que Gazebo Harmonic está completamente operativo.</p>
-
-  <div class="table-wrapper">
-    <table class="book-table">
-      <thead><tr><th>Comando</th><th>Qué verifica</th><th>Resultado esperado</th><th>Acción si falla</th></tr></thead>
-      <tbody>
-        <tr>
-          <td><code>dpkg -l | grep ros-jazzy-ros-gz</code></td>
-          <td>Paquetes <code>.deb</code> instalados</td>
-          <td>5 líneas con <code>ii</code></td>
-          <td>Reinstalar: <code>sudo apt install --reinstall</code></td>
-        </tr>
-        <tr>
-          <td><code>ros2 pkg list | grep ros_gz</code></td>
-          <td>Paquetes reconocidos por ROS 2</td>
-          <td><code>ros_gz</code>, <code>ros_gz_bridge</code>, <code>ros_gz_image</code>, <code>ros_gz_interfaces</code>, <code>ros_gz_sim</code></td>
-          <td>Recargar entorno</td>
-        </tr>
-        <tr>
-          <td><code>which gz</code></td>
-          <td>Binario <code>gz</code> en PATH</td>
-          <td><code>/usr/bin/gz</code> o <code>/opt/ros/jazzy/.../bin/gz</code></td>
-          <td>Recargar entorno o instalar vendor</td>
-        </tr>
-        <tr>
-          <td><code>dpkg -l | grep gz-harmonic</code></td>
-          <td>Vendor de Gazebo Harmonic</td>
-          <td>Línea con <code>ii</code></td>
-          <td><code>sudo apt install --reinstall ros-jazzy-gz-tools-vendor</code></td>
-        </tr>
-        <tr>
-          <td><code>ros2 pkg prefix ros_gz_sim</code></td>
-          <td>Ruta del paquete <code>ros_gz_sim</code></td>
-          <td><code>/opt/ros/jazzy</code></td>
-          <td>Reinstalar paquete</td>
-        </tr>
-        <tr>
-          <td><code>ros2 pkg executables ros_gz_sim</code></td>
-          <td>Launch files disponibles</td>
-          <td><code>gz_sim.launch.py</code></td>
-          <td>Reinstalar <code>ros-gz-sim</code></td>
-        </tr>
-        <tr>
-          <td><code>ros2 launch ros_gz_sim gz_sim.launch.py</code></td>
-          <td>Arranque de Gazebo</td>
-          <td>Se abre la ventana 3D</td>
-          <td>Revisar el árbol de diagnóstico del Paso 13</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h3><i class="bi bi-bug me-2"></i>Paso 12 — Problemas frecuentes</h3>
-  <p>Tabla de errores documentados durante la validación de este libro en Ubuntu 24.04 + WSL2 + ROS 2 Jazzy.</p>
-
-  <div class="table-wrapper">
-    <table class="book-table">
-      <thead><tr><th style="min-width:240px">Problema</th><th>Causa</th><th>Solución</th></tr></thead>
-      <tbody>
-        <tr>
-          <td><code>gz: command not found</code></td>
-          <td>El binario <code>gz</code> del vendor no se cargó en el <code>PATH</code> o el vendor no se instaló.</td>
-          <td>Ejecute <code>source /opt/ros/jazzy/setup.bash</code> o use el launch <code>ros2 launch ros_gz_sim gz_sim.launch.py</code>.</td>
-        </tr>
-        <tr>
-          <td><code>Package 'ros_gz_sim' not found</code></td>
-          <td>El paquete no se instaló o el entorno no está cargado.</td>
-          <td>Verifique con <code>dpkg -l | grep ros-jazzy-ros-gz-sim</code>. Si no aparece, ejecute <code>sudo apt install ros-jazzy-ros-gz-sim</code>.</td>
-        </tr>
-        <tr>
-          <td><code>Package 'ros_gz_bridge' not found</code></td>
-          <td>El puente entre ROS 2 y Gazebo no se instaló.</td>
-          <td>Instale con <code>sudo apt install ros-jazzy-ros-gz-bridge</code> y verifique con <code>ros2 pkg list | grep ros_gz</code>.</td>
-        </tr>
-        <tr>
-          <td><code>No executable found</code></td>
-          <td>Se intentó ejecutar un nodo o launch que no existe en el paquete.</td>
-          <td>Liste los ejecutables con <code>ros2 pkg executables &lt;paquete&gt;</code> y use el nombre correcto.</td>
-        </tr>
-        <tr>
-          <td><code>Missing vendor</code></td>
-          <td>El paquete <code>ros-jazzy-gz-tools-vendor</code> no está instalado.</td>
-          <td>Instale con <code>sudo apt install ros-jazzy-gz-tools-vendor</code> y recargue el entorno.</td>
-        </tr>
-        <tr>
-          <td>El bridge no inicia</td>
-          <td>Archivo YAML mal configurado o tópicos inexistentes en Gazebo.</td>
-          <td>Revise el log del bridge con <code>ros2 run ros_gz_bridge parameter_bridge --ros-args -p config_file:=&lt;archivo&gt;.yaml</code>.</td>
-        </tr>
-        <tr>
-          <td>RViz no detecta el mundo de Gazebo</td>
-          <td>El tópico <code>/world/.../pose/info</code> no está puenteado o el <code>Fixed Frame</code> es incorrecto.</td>
-          <td>Verifique los tópicos con <code>ros2 topic list</code> y configure <code>Fixed Frame</code> en RViz.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h3><i class="bi bi-diagram-3 me-2"></i>Paso 13 — Árbol de diagnóstico paso a paso</h3>
-  <p>Siga este árbol de decisión si Gazebo no se inicia correctamente.</p>
-
-  <div class="table-wrapper">
-    <table class="book-table">
-      <thead><tr><th>Diagnóstico</th><th>Comando</th><th>Si falla</th><th>Acción correctiva</th></tr></thead>
-      <tbody>
-        <tr>
-          <td><strong>1. ¿Está ROS 2 Jazzy instalado?</strong></td>
-          <td><code>echo $ROS_DISTRO</code></td>
-          <td>Devuelve vacío</td>
-          <td>Ejecute <code>source /opt/ros/jazzy/setup.bash</code> y agréguelo a <code>~/.bashrc</code>.</td>
-        </tr>
-        <tr>
-          <td><strong>2. ¿Existen los paquetes <code>ros_gz</code>?</strong></td>
-          <td><code>ros2 pkg list | grep ros_gz</code></td>
-          <td>No devuelve nada</td>
-          <td>Verifique con <code>dpkg -l | grep ros-jazzy-ros-gz</code>. Si están instalados, recargue el entorno.</td>
-        </tr>
-        <tr>
-          <td><strong>3. ¿Está instalado el vendor de Gazebo?</strong></td>
-          <td><code>dpkg -l | grep ros-jazzy-gz-tools-vendor</code></td>
-          <td>No aparece</td>
-          <td>Instale con <code>sudo apt install ros-jazzy-gz-tools-vendor</code>.</td>
-        </tr>
-        <tr>
-          <td><strong>4. ¿Está el binario <code>gz</code> en el PATH?</strong></td>
-          <td><code>which gz</code></td>
-          <td>Vacío</td>
-          <td>Recargue el entorno: <code>source /opt/ros/jazzy/setup.bash</code>.</td>
-        </tr>
-        <tr>
-          <td><strong>5. ¿Existen los launch files?</strong></td>
-          <td><code>ros2 pkg executables ros_gz_sim</code></td>
-          <td>Vacío</td>
-          <td>Reinstale: <code>sudo apt install --reinstall ros-jazzy-ros-gz-sim</code>.</td>
-        </tr>
-        <tr>
-          <td><strong>6. ¿Arranca Gazebo por launch?</strong></td>
-          <td><code>ros2 launch ros_gz_sim gz_sim.launch.py</code></td>
-          <td>Error o se cierra</td>
-          <td>Revise el log con <code>ros2 launch ros_gz_sim gz_sim.launch.py --debug</code> y busque errores de OpenGL/Wayland.</td>
-        </tr>
-        <tr>
-          <td><strong>7. ¿WSLg detecta la GPU?</strong></td>
-          <td><code>echo $WAYLAND_DISPLAY</code></td>
-          <td>Vacío</td>
-          <td>Reinicie WSL: <code>wsl --shutdown</code> desde PowerShell y vuelva a abrir Ubuntu.</td>
-        </tr>
-        <tr>
-          <td><strong>8. ¿El binario nativo responde?</strong></td>
-          <td><code>gz sim --help</code></td>
-          <td>Falla</td>
-          <td>Reinstale: <code>sudo apt install --reinstall ros-jazzy-gz-tools-vendor</code>.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h3><i class="bi bi-tools me-2"></i>Paso 14 — Reinstalación limpia (recuperación total)</h3>
-  <p>Si el árbol de diagnóstico no resuelve el problema, ejecute una reinstalación limpia de todo el ecosistema Gazebo.</p>
+  <h3><i class="bi bi-tools me-2"></i>Paso 11 — Si <code>gz sim</code> todavía falla</h3>
+  <p>Si tras configurar las variables <code>gz sim</code> no se inicia, la alternativa es ejecutar Gazebo a través de un launch de ROS 2.</p>
 
   <div class="code-block-wrapper">
     <div class="code-block-header">
       <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
       <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
     </div>
-    <pre><code>sudo apt remove -y \
-  ros-jazzy-ros-gz \
-  ros-jazzy-ros-gz-sim \
-  ros-jazzy-ros-gz-bridge \
-  ros-jazzy-ros-gz-image \
-  ros-jazzy-gz-tools-vendor
-
-sudo apt autoremove -y
-
-sudo apt update
-
-sudo apt install -y \
-  ros-jazzy-ros-gz \
-  ros-jazzy-ros-gz-sim \
-  ros-jazzy-ros-gz-bridge \
-  ros-jazzy-ros-gz-image \
-  ros-jazzy-gz-tools-vendor
-
-source /opt/ros/jazzy/setup.bash</code></pre>
+    <pre><code>ros2 launch ros_gz_sim gz_sim.launch.py</code></pre>
   </div>
+
+  <div class="callout callout-danger">
+    <div class="callout-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
+    <div class="callout-body">
+      <strong>Error observado: <code>AttributeError: NoneType has no attribute lower</code></strong>
+      <p>Durante las pruebas del libro, este error apareció únicamente cuando Python no podía localizar el ejecutable <code>gz</code>. El launcher de ROS 2 intenta resolver la ruta del binario en tiempo de ejecución y falla si <code>which gz</code> devuelve vacío.</p>
+      <p>La solución es siempre la misma: confirmar que el <code>PATH</code> incluye la carpeta del vendor (<a href="#paso4">Paso 4</a>) y que las variables <code>GZ_*</code> están configuradas (<a href="#paso8">Paso 8</a>). Tras recargar <code>~/.bashrc</code>, el error desaparece.</p>
+    </div>
+  </div>
+
+  <h3><i class="bi bi-clipboard-check me-2"></i>Paso 12 — Verificación final</h3>
+  <p>Antes de continuar con los siguientes capítulos, confirme los tres puntos clave.</p>
+
+  <h4>1. El binario <code>gz</code> está en el PATH</h4>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>which gz</code></pre>
+  </div>
+
+  <p><strong>Salida esperada:</strong></p>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">salida</span>
+    </div>
+    <pre><code>/opt/ros/jazzy/opt/gz_tools_vendor/bin/gz</code></pre>
+  </div>
+
+  <h4>2. Gazebo Harmonic arranca</h4>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>gz sim</code></pre>
+  </div>
+
+  <p>Debe abrirse la ventana 3D de Gazebo Harmonic con un mundo vacío.</p>
+
+  <h4>3. Los paquetes ROS siguen disponibles</h4>
+  <div class="code-block-wrapper">
+    <div class="code-block-header">
+      <span class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></span><span class="code-block-lang" style="margin-left:.5rem">bash</span>
+      <button class="btn-copy" type="button"><i class="bi bi-clipboard"></i> Copiar</button>
+    </div>
+    <pre><code>ros2 pkg list | grep ros_gz</code></pre>
+  </div>
+
+  <p>Deben seguir apareciendo los cinco paquetes: <code>ros_gz</code>, <code>ros_gz_bridge</code>, <code>ros_gz_image</code>, <code>ros_gz_interfaces</code> y <code>ros_gz_sim</code>.</p>
 
   <div class="callout callout-warning">
     <div class="callout-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
     <div class="callout-body">
       <strong>Nota técnica sobre esta corrección</strong>
-      <p>Durante la validación del libro sobre una instalación limpia de Windows 11 + WSL2 + Ubuntu 24.04.4 + ROS 2 Jazzy se detectó que la instalación de Gazebo Harmonic requería verificaciones explícitas en cada nivel: paquetes <code>.deb</code>, vendor, binario <code>gz</code>, launch files y arranque efectivo. Esta sección fue completamente reescrita para garantizar la reproducibilidad del procedimiento en cualquier entorno Ubuntu 24.04 + WSL2 + ROS 2 Jazzy.</p>
+      <p>Durante la validación del libro sobre una instalación limpia de Windows 11 + WSL2 + Ubuntu 24.04.4 + ROS 2 Jazzy se descubrió que la instalación Vendor de Gazebo Harmonic no exporta automáticamente el binario <code>gz</code> ni las variables <code>GZ_CONFIG_PATH</code>, <code>GZ_PLUGIN_PATH</code> y <code>GZ_SIM_RESOURCE_PATH</code>. Esta sección documenta el procedimiento manual necesario para dejar la instalación completamente operativa y reproducible, replicable por cualquier estudiante sin necesidad de ensayo y error.</p>
     </div>
   </div>
 </section>
